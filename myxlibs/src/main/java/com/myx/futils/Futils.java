@@ -10,9 +10,11 @@ import android.content.pm.PackageManager;
 
 public class Futils {
     /**
-     * 获取版本号
+     * app.name
+     * @param context
+     * @return
      */
-    public static String getAppVersion(Context context) {
+    public static String getAppVersionName(Context context) {
         try {
             PackageManager manager = context.getPackageManager();
             PackageInfo info = manager.getPackageInfo(context.getPackageName(), 0);
