@@ -35,9 +35,9 @@ dependencies {
 //添加
 publish {
     userOrg = 'myx'//bintray.com用户名
-    groupId = 'com.myx'//jcenter上的路径
+    groupId = 'com.myx.library'//jcenter上的路径
     artifactId = 'futils'//项目名称
-    publishVersion = '1.0.0'//版本号
+    publishVersion = '1.0.1'//版本号
     desc = 'android utils'
     website = 'https://github.com/myxfeng/myxLib'
 }
