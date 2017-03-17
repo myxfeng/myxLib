@@ -10,8 +10,18 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="com.myx.feng.myxlib.MainActivity">
 
-    <TextView
+    <!--<com.facebook.drawee.view.SimpleDraweeView
+        android:id="@+id/img"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+         />-->
+
+    <Button
+        android:text="Button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Hello World!" />
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:onClick="postImg"
+        android:id="@+id/button" />
 </RelativeLayout>

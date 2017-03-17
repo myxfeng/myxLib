@@ -3,10 +3,13 @@ apply plugin: 'com.novoda.bintray-release'//添加
 android {
     compileSdkVersion 24
     buildToolsVersion "25.0.2"
+    lintOptions {
+        abortOnError false
+    }
 
     defaultConfig {
-        minSdkVersion 15
-        targetSdkVersion 24
+        minSdkVersion 11
+        targetSdkVersion 19
         versionCode 1
         versionName "1.0"
 
@@ -20,9 +23,7 @@ android {
         }
     }
 }
-tasks.withType(JavaCompile) {
-    options.encoding = "UTF-8"
-}
+
 
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
@@ -30,14 +31,39 @@ dependencies {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
     compile 'com.android.support:appcompat-v7:24.2.1'
+    compile group: 'org.bouncycastle', name: 'bcprov-jdk16', version: '1.45'
+    compile('com.facebook.fresco:fresco:0.12.0') {
+        // exclude group: 'com.nineoldandroids'
+        exclude group: 'imagepipeline/jni/arm64-v8a'
+        exclude group: 'imagepipeline/jni/x86_64'
+    }
+    // 在 API < 14 上的机器支持 WebP 时，需要添加
+    compile 'com.facebook.fresco:animated-base-support:0.12.0'
+    // 支持 GIF 动图，需要添加
+    compile 'com.facebook.fresco:animated-gif:0.12.0'
+    // 支持 WebP （静态图+动图），需要添加
+    compile 'com.facebook.fresco:animated-webp:0.12.0'
+    compile 'com.facebook.fresco:webpsupport:0.12.0'
     testCompile 'junit:junit:4.12'
+
+    //网络层框架
+    compile 'com.squareup.retrofit2:retrofit:2.1.0'
+    compile 'com.squareup.retrofit2:converter-gson:2.1.0'
+    compile 'com.squareup.retrofit2:adapter-rxjava:2.1.0'
+    compile 'com.squareup.okhttp3:okhttp:3.4.2'
+    compile 'com.squareup.okhttp3:logging-interceptor:3.4.2'
+
+    // 解析
+    compile "com.google.code.gson:gson-parent:2.6.2"
+    compile "com.google.code.gson:gson:2.6.2"
 }
 //添加
 publish {
     userOrg = 'myx'//bintray.com用户名
+    repoName = 'maven'
     groupId = 'com.myx.library'//jcenter上的路径
-    artifactId = 'futils'//项目名称
-    publishVersion = '1.0.1'//版本号
+    artifactId = 'lib'//项目名称
+    publishVersion = '1.0.0'//版本号
     desc = 'android utils'
     website = 'https://github.com/myxfeng/myxLib'
 }

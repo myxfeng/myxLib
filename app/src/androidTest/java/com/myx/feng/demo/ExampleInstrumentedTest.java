@@ -1,4 +1,4 @@
-package com.myx.feng.myxlib;
+package com.myx.feng.demo;
 
 import android.content.Context;
 import android.support.test.InstrumentationRegistry;
