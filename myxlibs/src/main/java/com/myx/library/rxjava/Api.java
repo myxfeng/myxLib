@@ -29,28 +29,20 @@ import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 
-/**
- *
- * 接口编写实例
-import com.myx.library.rxjava.URL;
-
-import retrofit2.http.GET;
-import retrofit2.http.Query;
-
-
-@URL(host = "http://api.people.cn",port = ":80")
-public interface ApiService  {
-    @GET("/getList")
-    String getNewsList(@Query("tagId") String tagId);
-}
-
- *
- */
-
-/*************************
- * 缓存设置
- *********************/
 /*
+    接口编写实例
+    import com.myx.library.rxjava.URL;
+
+    import retrofit2.http.GET;
+    import retrofit2.http.Query;
+
+
+    @URL(host = "http://api.people.cn",port = ":80") // 配置路径
+    public interface ApiService  {
+        @GET("/getList")// 配置接口api
+        String getNewsList(@Query("tagId") String tagId);
+    }
+————————————缓存配置——————————————————————————————
     1. noCache 不使用缓存，全部走网络
 
     2. noStore 不使用缓存，也不存储缓存
@@ -66,7 +58,9 @@ public interface ApiService  {
     7. FORCE_NETWORK 只走网络
 
     8. FORCE_CACHE 只走缓存*/
-
+/**
+ * Created by mayuxin on 2017/3/23.
+ */
 public class Api {
 
     //读超时长，单位：毫秒
