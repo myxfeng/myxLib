@@ -1,4 +1,4 @@
-package com.myx.library.util;
+package com.myx.library.http;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -59,7 +59,9 @@ public class OkHttpManager {
      */
     public static OkHttpManager getInstance() {
         if (okhttpmanager == null) {
-            okhttpmanager = new OkHttpManager();
+            synchronized (OkHttpManager.class) {
+                okhttpmanager = new OkHttpManager();
+            }
         }
         return okhttpmanager;
     }
@@ -75,18 +77,16 @@ public class OkHttpManager {
     }
 
 
-
-
     /**
      * @param url
      * @param hashmap
      * @param listener
      * @param method
-     * @param isSync
+     * @param isAsyn
      * @return
      * @throws IOException
      */
-    private String request(String url, HashMap<String, String> hashmap, String method, boolean isSync, final OnHttpListener listener) {
+    private String request(String url, HashMap<String, String> hashmap, String method, boolean isAsyn, final OnHttpListener listener) {
         RequestBody requestbody = null;
         if ("GET".equals(method)) {
             url = HttpUtil.setUrlParameter(url, hashmap);
@@ -95,7 +95,7 @@ public class OkHttpManager {
 
         }
         Request request = new Request.Builder().url(url).method(method, requestbody).build();
-        if (isSync) {
+        if (isAsyn) {
             mOkHttpClient.newCall(request).enqueue(new Callback() {
                 @Override
                 public void onFailure(Call call, IOException e) {
@@ -124,48 +124,11 @@ public class OkHttpManager {
     }
 
     /**
-     * RequestBody requestFile = RequestBody.create(MediaType.parse("multipart/form-data"), file);
-     * MultipartBody.Part part = MultipartBody.Part.createFormData(UPLOAD_DATA_PARAM, file.getName(), requestFile);
-     *
-     * @param url
-     * @param hashMap
-     * @param fileKey
-     * @param files
-     * @param listener
-     */
-    public void postFile(String url, HashMap<String, String> hashMap, String fileKey, ArrayList<File> files, final OnHttpListener listener) {
-        MultipartBody.Builder builder = new MultipartBody.Builder().addPart(HttpUtil.hasMapToBody(hashMap));
-        if (files != null) {
-            for (File file : files) {
-                RequestBody filbody = RequestBody.create(MediaType.parse("multipart/form-data"), file);
-                builder.addFormDataPart(fileKey + "[]", file.getName(), filbody);
-            }
-        }
-        builder.addPart(HttpUtil.hasMapToBody(hashMap));
-        Request request = new Request.Builder().url(url).post(builder.build()).build();
-        mOkHttpClient.newCall(request).enqueue(new Callback() {
-            @Override
-            public void onFailure(Call call, IOException e) {
-                if (listener != null) {
-                    listener.onFailure(call, e);
-                }
-            }
-
-            @Override
-            public void onResponse(Call call, Response response) throws IOException {
-                if (listener != null) {
-                    listener.onSuccess(call, response, response.body().string());
-                }
-            }
-        });
-    }
-
-    /**
      * @param url
      * @param hashMap
      * @param listener
      */
-    public void getSync(String url, HashMap<String, String> hashMap, final OnHttpListener listener) {
+    public void getAsyn(String url, HashMap<String, String> hashMap, final OnHttpListener listener) {
         request(url, hashMap, "GET", true, listener);
     }
 
@@ -173,7 +136,7 @@ public class OkHttpManager {
      * @param url
      * @param listener
      */
-    public void getSync(String url, final OnHttpListener listener) {
+    public void getAsyn(String url, final OnHttpListener listener) {
         request(url, null, "GET", true, listener);
     }
 
@@ -199,7 +162,7 @@ public class OkHttpManager {
      * @param hashMap
      * @param listener
      */
-    public void postSync(String url, HashMap<String, String> hashMap, final OnHttpListener listener) {
+    public void postAsyn(String url, HashMap<String, String> hashMap, final OnHttpListener listener) {
         request(url, hashMap, "POST", true, listener);
     }
 
@@ -207,7 +170,7 @@ public class OkHttpManager {
      * @param url
      * @param listener
      */
-    public void postSync(String url, final OnHttpListener listener) {
+    public void postAsyn(String url, final OnHttpListener listener) {
         request(url, null, "POST", true, listener);
     }
 
@@ -273,6 +236,43 @@ public class OkHttpManager {
                     }
                 }
 
+            }
+        });
+    }
+
+    /**
+     * RequestBody requestFile = RequestBody.create(MediaType.parse("multipart/form-data"), file);
+     * MultipartBody.Part part = MultipartBody.Part.createFormData(UPLOAD_DATA_PARAM, file.getName(), requestFile);
+     *
+     * @param url
+     * @param hashMap
+     * @param fileKey
+     * @param files
+     * @param listener
+     */
+    public void postAsynFile(String url, HashMap<String, String> hashMap, String fileKey, ArrayList<File> files, final OnHttpListener listener) {
+        MultipartBody.Builder builder = new MultipartBody.Builder().addPart(HttpUtil.hasMapToBody(hashMap));
+        if (files != null) {
+            for (File file : files) {
+                RequestBody filbody = RequestBody.create(MediaType.parse("multipart/form-data"), file);
+                builder.addFormDataPart(fileKey + "[]", file.getName(), filbody);
+            }
+        }
+        builder.addPart(HttpUtil.hasMapToBody(hashMap));
+        Request request = new Request.Builder().url(url).post(builder.build()).build();
+        mOkHttpClient.newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                if (listener != null) {
+                    listener.onFailure(call, e);
+                }
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                if (listener != null) {
+                    listener.onSuccess(call, response, response.body().string());
+                }
             }
         });
     }

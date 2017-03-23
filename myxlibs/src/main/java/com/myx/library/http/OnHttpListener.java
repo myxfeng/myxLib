@@ -1,4 +1,4 @@
-package com.myx.library.util;
+package com.myx.library.http;
 
 import java.io.IOException;
 

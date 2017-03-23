@@ -1,4 +1,6 @@
-package com.myx.library.util;
+package com.myx.library.http;
+
+import com.myx.library.util.CheckUtils;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;

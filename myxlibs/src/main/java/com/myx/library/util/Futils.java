@@ -12,9 +12,12 @@ import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
 import android.os.Build;
 import android.os.Bundle;
+import android.util.DisplayMetrics;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 
+import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.Type;
 import java.net.InetAddress;
 import java.net.NetworkInterface;
 import java.net.SocketException;
@@ -339,4 +342,56 @@ public class Futils {
 
         return (i & 0xFF) + "." + ((i >> 8) & 0xFF) + "." + ((i >> 16) & 0xFF) + "." + (i >> 24 & 0xFF);
     }
+    public static DisplayMetrics getDisplayMetrics(Context context) {
+        return context.getResources().getDisplayMetrics();
+    }
+
+    /**
+     * 获取屏幕高度
+     * @param context
+     * @return
+     */
+    public static int getScreenHeight(Context context) {
+        DisplayMetrics dm = getDisplayMetrics(context);
+        return dm.heightPixels;
+    }
+
+    /** 获取屏幕宽度
+     * @param context
+     * @return
+     */
+    public static int getScreenWidth(Context context) {
+        DisplayMetrics dm = getDisplayMetrics(context);
+        return dm.widthPixels;
+    }
+
+    /**
+     * 根据泛型获取实例
+     * @param o
+     * @param i
+     * @param <T>
+     * @return
+     */
+    @SuppressWarnings("unchecked")
+    public static <T> T getT(Object o, int i) {
+        try {
+            Type type = o.getClass().getGenericSuperclass();
+            Type[] actualTypeArguments = ((ParameterizedType)(type)).getActualTypeArguments();
+            return ((Class<T>)actualTypeArguments[i]).newInstance();
+        } catch (InstantiationException | ClassCastException | IllegalAccessException e) {
+//            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public static Class<?> forName(String className) {
+        try {
+            return Class.forName(className);
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+
 }
