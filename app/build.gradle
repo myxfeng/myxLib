@@ -3,9 +3,6 @@ apply plugin: 'com.android.application'
 android {
     compileSdkVersion 25
     buildToolsVersion '25.0.2'
-    lintOptions {
-        abortOnError false
-    }
 
     defaultConfig {
         applicationId "com.myx.feng.myxlib"
@@ -31,6 +28,5 @@ dependencies {
     compile 'com.android.support:appcompat-v7:25.2.0'
     testCompile 'junit:junit:4.12'
     //    compile 'com.myx.library:futils:1.0.1'
-        compile project(':myxlibs')
-//    compile 'com.myx.library:lib:1.0.0'
+    compile project(':myxlibs')
 }

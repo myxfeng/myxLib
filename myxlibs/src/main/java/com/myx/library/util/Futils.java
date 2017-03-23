@@ -16,13 +16,21 @@ import android.util.DisplayMetrics;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 
+import java.lang.annotation.Annotation;
+import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.net.InetAddress;
 import java.net.NetworkInterface;
 import java.net.SocketException;
 import java.security.MessageDigest;
+import java.util.ArrayList;
 import java.util.Enumeration;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Objects;
 
 import static android.view.View.INVISIBLE;
 import static android.view.View.VISIBLE;
@@ -73,7 +81,7 @@ public class Futils {
      * @param context
      * @return boolean
      */
-    public static synchronized boolean isNetworkConnected(Context context) {
+    public static synchronized boolean isNetConnected(Context context) {
         boolean isConnected = false;
         ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
         if (cm == null) {
@@ -120,7 +128,7 @@ public class Futils {
      * @param context
      * @return boolean
      */
-    public static boolean isMobileNetworkConnected(Context context) {
+    public static boolean isMobileConnected(Context context) {
         ConnectivityManager connManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
         if (connManager != null) {
             NetworkInfo networkInfo = connManager.getActiveNetworkInfo();
@@ -392,6 +400,41 @@ public class Futils {
         }
         return null;
     }
+    public void get(Class cls,Class target){
+//        Field[] fields = cls.getDeclaredFields();
+//        List<Field> result = new ArrayList<Field>();
+//        for (Field field:fields){
+//            if(field.getAnnotation(target)!=null)
+//                result.add(field);
+//        }
+//
+//        for(Field list:result){
+////            list.
+////            System.out.println("被注解的字段为:"+list.getName());
+//        }
+    }
+    public static  HashMap<String,Object> getClassValue(Class cls,Class target){
+        Annotation anno = cls.getAnnotation(target);
 
+        if(anno != null){
+            Method[] met = anno.annotationType().getDeclaredMethods();
+            HashMap<String,Object> hashMap=new HashMap<>();
+            for(Method me : met ){
+                if(!me.isAccessible()){
+                    me.setAccessible(true);
+
+                }
+                try {
+                    hashMap.put(me.getName(),me.invoke(anno, null));
+//                    System.out.println(me.invoke(anno, null));
+                } catch (Exception e) {
+                    e.printStackTrace();
+
+                }
+            }
+            return  hashMap;
+        }
+        return null;
+    }
 
 }
