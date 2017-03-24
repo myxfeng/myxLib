@@ -69,7 +69,7 @@ public class Api {
     //连接时长，单位：毫秒
     public static final int CONNECT_TIME_OUT = 10000;
 
-    public Retrofit retrofit;
+    private Retrofit retrofit;
 
 
     private static HashMap<String, Api> sRetrofitManager = new HashMap<>();
@@ -165,7 +165,8 @@ public class Api {
     }
 
     public static <T> T getDefault(Class<T> cls) {
-        HashMap<String, Object> hash = Futils.getClassValue(cls, BaseUrl.class);
+//        HashMap<String, Object> hash = Futils.getClassValue(cls, BaseUrl.class);
+        HashMap<String, Object> hash = Futils.geBaseUrlValue(cls);
         String url = hash.get("host").toString() + hash.get("port").toString();
         String url_key = Futils.getMD5(url);
         Api retrofitManager = sRetrofitManager.get(url_key);

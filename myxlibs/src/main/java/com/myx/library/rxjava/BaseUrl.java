@@ -9,7 +9,7 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 /**
  * Created by mayuxin on 2017/3/23.
  */
-@Target({ElementType.TYPE,ElementType.FIELD})
+@Target({ElementType.TYPE})
 @Retention(RUNTIME)
 public @interface BaseUrl {
     String host() default "";

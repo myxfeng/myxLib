@@ -2,14 +2,23 @@ package com.myx.library.http;
 
 import com.myx.library.util.CheckUtils;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
+import java.security.KeyStore;
+import java.security.SecureRandom;
+import java.security.cert.CertificateFactory;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.TrustManagerFactory;
+
 import okhttp3.FormBody;
+import okhttp3.OkHttpClient;
 import okhttp3.RequestBody;
 
 /**
@@ -81,5 +90,44 @@ public class HttpUtil {
             return builder.build();
         }
         return null;
+    }
+
+    public static OkHttpClient.Builder setCertificates(OkHttpClient.Builder builder,InputStream... certificates) {
+        try {
+            CertificateFactory certificateFactory = CertificateFactory.getInstance("X.509");
+            KeyStore keyStore = KeyStore.getInstance(KeyStore.getDefaultType());
+            keyStore.load(null);
+            int index = 0;
+            for (InputStream certificate : certificates) {
+                String certificateAlias = Integer.toString(index++);
+                keyStore.setCertificateEntry(certificateAlias, certificateFactory.generateCertificate(certificate));
+
+                try {
+                    if (certificate != null)
+                        certificate.close();
+                } catch (IOException e) {
+                }
+            }
+
+            SSLContext sslContext = SSLContext.getInstance("TLS");
+
+            TrustManagerFactory trustManagerFactory =
+                    TrustManagerFactory.getInstance(TrustManagerFactory.getDefaultAlgorithm());
+
+            trustManagerFactory.init(keyStore);
+            sslContext.init
+                    (
+                            null,
+                            trustManagerFactory.getTrustManagers(),
+                            new SecureRandom()
+                    );
+           return  builder.sslSocketFactory(sslContext.getSocketFactory());
+
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return builder;
+
     }
 }

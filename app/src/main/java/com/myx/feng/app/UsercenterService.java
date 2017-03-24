@@ -1,5 +1,6 @@
 package com.myx.feng.app;
 
+import com.myx.feng.CollectResult;
 import com.myx.library.rxjava.BaseUrl;
 
 import retrofit2.http.GET;
@@ -11,6 +12,6 @@ import rx.Observable;
  */
 @BaseUrl(host = AppContans.SERVER__USER_API,port = AppContans.SERVER__USER_PORT)
 public  interface UsercenterService {
-    @GET("/getname")
-    Observable<String> getName(@Query("userid") String userid);
+    @GET("/sports/userinfo/api/v2/favor/sync")
+    Observable<CollectResult> syncCollect(@Query("sessionId") String sessionId);
 }

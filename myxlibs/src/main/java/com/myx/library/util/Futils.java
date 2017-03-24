@@ -16,9 +16,9 @@ import android.util.DisplayMetrics;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 
+import com.myx.library.rxjava.BaseUrl;
+
 import java.lang.annotation.Annotation;
-import java.lang.reflect.Field;
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
@@ -26,11 +26,8 @@ import java.net.InetAddress;
 import java.net.NetworkInterface;
 import java.net.SocketException;
 import java.security.MessageDigest;
-import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.HashMap;
-import java.util.List;
-import java.util.Objects;
 
 import static android.view.View.INVISIBLE;
 import static android.view.View.VISIBLE;
@@ -415,7 +412,6 @@ public class Futils {
     }
     public static  HashMap<String,Object> getClassValue(Class cls,Class target){
         Annotation anno = cls.getAnnotation(target);
-
         if(anno != null){
             Method[] met = anno.annotationType().getDeclaredMethods();
             HashMap<String,Object> hashMap=new HashMap<>();
@@ -436,5 +432,18 @@ public class Futils {
         }
         return null;
     }
+    public static  HashMap<String,Object> geBaseUrlValue(Class cls){
+        HashMap<String,Object> hashMap=new HashMap<>();
+        try{
+            boolean exist = cls.isAnnotationPresent(BaseUrl.class);
+            if(exist){
+                BaseUrl anno = (BaseUrl) cls.getAnnotation(BaseUrl.class);
+                hashMap.put("host",anno.host());
+                hashMap.put("port",anno.port());
+            }
+        }catch (Exception e){
 
+        }
+        return  hashMap;
+    }
 }

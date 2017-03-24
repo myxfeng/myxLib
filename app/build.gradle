@@ -5,7 +5,7 @@ android {
     buildToolsVersion '25.0.2'
 
     defaultConfig {
-        applicationId "com.myx.feng.myxlib"
+        applicationId "com.myx.feng"
         minSdkVersion 11
         targetSdkVersion 25
         versionCode 1

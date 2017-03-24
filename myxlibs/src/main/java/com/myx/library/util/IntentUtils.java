@@ -5,8 +5,6 @@ import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
-import android.util.Base64;
-import android.widget.Toast;
 
 /**
  * Created by mayuxin on 2017/3/17.

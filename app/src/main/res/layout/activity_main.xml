@@ -27,4 +27,27 @@
         android:layout_toEndOf="@+id/img"
         android:layout_marginLeft="124dp"
         android:layout_marginStart="124dp" />
+
+    <Button
+        android:text="获取收藏的文章名字"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/img"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginRight="13dp"
+        android:layout_marginEnd="13dp"
+        android:onClick="getTitle"
+        android:layout_marginTop="102dp"
+        android:id="@+id/button2" />
+
+    <TextView
+        android:text="TextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/button2"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_marginBottom="13dp"
+        android:id="@+id/title" />
 </RelativeLayout>
