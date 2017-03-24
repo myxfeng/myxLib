@@ -1,4 +1,4 @@
-package com.myx.feng.myxlib;
+package com.myx.feng;
 
 /**
  * Created by mayuxin on 2017/3/17.

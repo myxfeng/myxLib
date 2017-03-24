@@ -11,7 +11,7 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
  */
 @Target({ElementType.TYPE,ElementType.FIELD})
 @Retention(RUNTIME)
-public @interface URL {
+public @interface BaseUrl {
     String host() default "";
-    String port() default ":80";
+    String port() default "";
 }

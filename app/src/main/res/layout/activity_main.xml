@@ -8,20 +8,23 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context="com.myx.feng.myxlib.MainActivity">
+    >
 
-    <!--<com.facebook.drawee.view.SimpleDraweeView
+    <com.facebook.drawee.view.SimpleDraweeView
         android:id="@+id/img"
         android:layout_width="100dp"
         android:layout_height="100dp"
-         />-->
+         />
 
     <Button
-        android:text="Button"
+        android:text="获取数据 加载图片"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
         android:onClick="postImg"
-        android:id="@+id/button" />
+        android:id="@+id/button"
+        android:layout_alignParentTop="true"
+        android:layout_toRightOf="@+id/img"
+        android:layout_toEndOf="@+id/img"
+        android:layout_marginLeft="124dp"
+        android:layout_marginStart="124dp" />
 </RelativeLayout>

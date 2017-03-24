@@ -1,7 +1,4 @@
 package com.myx.library.rxjava;
-/**
- * Created by Frank on 2016/11/30.
- */
 
 import android.app.Application;
 import android.support.annotation.NonNull;
@@ -9,12 +6,12 @@ import android.text.TextUtils;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.myx.library.http.ParamsInterceptor;
 import com.myx.library.util.Futils;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
-import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 
 import okhttp3.Cache;
@@ -27,17 +24,19 @@ import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Retrofit;
 import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
-
-
 /*
+    Api使用实例
+
+    Api.init();
+
     接口编写实例
-    import com.myx.library.rxjava.URL;
+    import com.myx.library.rxjava.BaseUrl;
 
     import retrofit2.http.GET;
     import retrofit2.http.Query;
 
 
-    @URL(host = "http://api.people.cn",port = ":80") // 配置路径
+    @BaseUrl(host = "http://api.people.cn",port = ":80") // 配置路径
     public interface ApiService  {
         @GET("/getList")// 配置接口api
         String getNewsList(@Query("tagId") String tagId);
@@ -58,6 +57,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
     7. FORCE_NETWORK 只走网络
 
     8. FORCE_CACHE 只走缓存*/
+
 /**
  * Created by mayuxin on 2017/3/23.
  */
@@ -90,61 +90,71 @@ public class Api {
     public static final String CACHE_CONTROL_AGE = "max-age=0";
 
     private static Application application;
+    private static OkHttpClient.Builder builder;
+    private static ParamsInterceptor paramsInterceptor;
 
-    public static void init(Application application) {
+    /**
+     * 自定义okhttpclient
+     * @param application
+     * @param builder
+     */
+    public static void init(Application application, OkHttpClient.Builder builder) {
         Api.application = application;
+        Api.builder = builder;
     }
 
+    /**
+     *
+     * @param application
+     * @param paramsInterceptor 公共参数
+     */
+    public static void init(Application application, ParamsInterceptor paramsInterceptor) {
+        Api.application = application;
+        Api.paramsInterceptor = paramsInterceptor;
+    }
+
+    /**
+     * 初始化
+     * @param application
+     */
+    public static void init(Application application){
+        Api.application = application;
+    }
     private Api(String baseUrl) {
-        //开启Log
-        HttpLoggingInterceptor logInterceptor = new HttpLoggingInterceptor();
-        logInterceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
-        //缓存
-        File cacheFile = new File(application.getCacheDir(), "cache");
-        Cache cache = new Cache(cacheFile, 1024 * 1024 * 100); //100Mb
+        OkHttpClient okHttpClient;
+        if (builder != null) {
+            okHttpClient = builder.build();
+        } else {
+            //开启Log
+            HttpLoggingInterceptor logInterceptor = new HttpLoggingInterceptor();
+            logInterceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
+            //缓存
+            File cacheFile = new File(application.getCacheDir(), "cache");
+            Cache cache = new Cache(cacheFile, 1024 * 1024 * 100); //100Mb
 
-        //增加头部信息
-        Interceptor headerInterceptor = new Interceptor() {
-            @Override
-            public Response intercept(Chain chain) throws IOException {
-                Request build = chain.request().newBuilder()
-                        .addHeader("Content-Type", "application/json")
-                        .build();
-                return chain.proceed(build);
+            //增加头部信息
+            Interceptor headerInterceptor = new Interceptor() {
+                @Override
+                public Response intercept(Chain chain) throws IOException {
+                    Request build = chain.request().newBuilder()
+                            .addHeader("Content-Type", "application/json")
+                            .build();
+                    return chain.proceed(build);
+                }
+            };
+            OkHttpClient.Builder temp = new OkHttpClient.Builder()
+                    .readTimeout(READ_TIME_OUT, TimeUnit.MILLISECONDS)
+                    .connectTimeout(CONNECT_TIME_OUT, TimeUnit.MILLISECONDS)
+                    .addInterceptor(mRewriteCacheControlInterceptor)
+                    .addNetworkInterceptor(mRewriteCacheControlInterceptor)
+                    .addInterceptor(headerInterceptor)
+                    .addInterceptor(logInterceptor)
+                    .cache(cache);
+            if (paramsInterceptor != null) {
+                temp.addInterceptor(paramsInterceptor);
             }
-        };
-
-        //TODO 增加公共参数
-//        Interceptor commonInterceptor = new Interceptor() {
-//            @Override
-//            public Response intercept(Chain chain) throws IOException {
-//                Request oldRequest = chain.request();
-//                // 添加新的参数
-//                HttpUrl.Builder authorizedUrlBuilder = oldRequest.url()
-//                        .newBuilder()
-//                        .scheme(oldRequest.url().scheme())
-//                        .host(oldRequest.url().host())
-//                        .addQueryParameter(key, value);
-//                // 新的请求
-//                Request newRequest = oldRequest.newBuilder()
-//                        .method(oldRequest.method(), oldRequest.body())
-//                        .url(authorizedUrlBuilder.build())
-//                        .build();
-//
-//                return chain.proceed(newRequest);
-//            }
-//        };
-
-        OkHttpClient okHttpClient = new OkHttpClient.Builder()
-                .readTimeout(READ_TIME_OUT, TimeUnit.MILLISECONDS)
-                .connectTimeout(CONNECT_TIME_OUT, TimeUnit.MILLISECONDS)
-                .addInterceptor(mRewriteCacheControlInterceptor)
-                .addNetworkInterceptor(mRewriteCacheControlInterceptor)
-                .addInterceptor(headerInterceptor)
-                .addInterceptor(logInterceptor)
-                .cache(cache)
-                .build();
-
+            okHttpClient = temp.build();
+        }
         Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd'T'HH:mm:ssZ").serializeNulls().create();
         retrofit = new Retrofit.Builder()
                 .client(okHttpClient)
@@ -155,9 +165,9 @@ public class Api {
     }
 
     public static <T> T getDefault(Class<T> cls) {
-        HashMap<String,Object> hash=Futils.getClassValue(cls,URL.class);
-        String url = hash.get("host").toString()+hash.get("port").toString();
-        String url_key=Futils.getMD5(url);
+        HashMap<String, Object> hash = Futils.getClassValue(cls, BaseUrl.class);
+        String url = hash.get("host").toString() + hash.get("port").toString();
+        String url_key = Futils.getMD5(url);
         Api retrofitManager = sRetrofitManager.get(url_key);
         if (retrofitManager == null) {
             retrofitManager = new Api(url);
@@ -205,14 +215,5 @@ public class Api {
         }
     };
 
-    class Builder{
-        //读超时长，单位：毫秒
-        public  int READ_TIME_OUT = 10000;
 
-        //连接时长，单位：毫秒
-        public int CONNECT_TIME_OUT = 10000;
-        Builder(){
-
-        }
-    }
 }

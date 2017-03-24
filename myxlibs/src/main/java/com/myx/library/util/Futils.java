@@ -425,7 +425,7 @@ public class Futils {
 
                 }
                 try {
-                    hashMap.put(me.getName(),me.invoke(anno, null));
+                    hashMap.put(me.getName(),me.invoke(anno, new Object[]{}));
 //                    System.out.println(me.invoke(anno, null));
                 } catch (Exception e) {
                     e.printStackTrace();

@@ -1,4 +1,6 @@
-package com.myx.feng.myxlib;
+package com.myx.feng;
+
+import com.myx.feng.NewsData;
 
 /**
  * Created by mayuxin on 2017/3/17.
