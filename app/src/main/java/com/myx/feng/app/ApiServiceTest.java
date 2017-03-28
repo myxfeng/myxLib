@@ -5,6 +5,8 @@ import com.myx.feng.NewsResult;
 import com.myx.library.rxjava.BaseUrl;
 
 import retrofit2.http.GET;
+import retrofit2.http.Header;
+import retrofit2.http.POST;
 import retrofit2.http.Query;
 import rx.Observable;
 
@@ -15,13 +17,17 @@ import rx.Observable;
 
 public class ApiServiceTest {
     @BaseUrl(host = AppContans.SERVER__USER_API)// 用户中心host
-    public static interface UserService{
+    public static interface UserService {
         @GET("/sports/userinfo/api/v2/favor/sync")
         Observable<CollectResult> syncCollect(@Query("sessionId") String sessionId);
     }
+
     @BaseUrl(host = AppContans.SERVER_API) // 普通新闻Host
-    public static interface ApiService{
+    public static interface ApiService {
         @GET("/sports/content/getdetail")
-        Observable<NewsResult> getDetail(@Query("articleid") String articleid);
+        Observable<NewsResult> getDetail(@Query("articleid") String articleid, @Header("Cache-Control") String cache_control,@Query("timestamp") String timestamp);
+
+        @GET("/sports/content/getList")
+        Observable<NewsResult> getList(@Query("tagId") String tagId);
     }
 }

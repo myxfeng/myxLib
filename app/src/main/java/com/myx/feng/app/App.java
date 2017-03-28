@@ -11,7 +11,6 @@ import com.myx.library.rxjava.Api;
 /**
  * Created by mayuxin on 2017/3/17.
  */
-
 public class App extends Application {
     @Override
     public void onCreate() {

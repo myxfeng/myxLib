@@ -3,6 +3,7 @@ package com.myx.library.rxjava;
 import android.app.Application;
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
+import android.util.Log;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -77,7 +78,7 @@ public class Api {
     /**
      * 设缓存有效期为两天
      */
-    private static final long CACHE_STALE_SEC = 60 * 60 * 24 * 2;
+    private static final long CACHE_STALE_SEC = Integer.MAX_VALUE;
     /**
      * 查询缓存的Cache-Control设置，为if-only-cache时只查询缓存而不会请求服务器，max-stale可以配合设置缓存失效时间
      * max-stale 指示客户机可以接收超出超时期间的响应消息。如果指定max-stale消息的值，那么客户机可接收超出超时期指定值之内的响应消息。
@@ -95,6 +96,7 @@ public class Api {
 
     /**
      * 自定义okhttpclient
+     *
      * @param application
      * @param builder
      */
@@ -104,7 +106,6 @@ public class Api {
     }
 
     /**
-     *
      * @param application
      * @param paramsInterceptor 公共参数
      */
@@ -115,11 +116,13 @@ public class Api {
 
     /**
      * 初始化
+     *
      * @param application
      */
-    public static void init(Application application){
+    public static void init(Application application) {
         Api.application = application;
     }
+
     private Api(String baseUrl) {
         OkHttpClient okHttpClient;
         if (builder != null) {
@@ -193,16 +196,30 @@ public class Api {
         @Override
         public Response intercept(Chain chain) throws IOException {
             Request request = chain.request();
-            String cacheControl = request.cacheControl().toString();
-            if (!Futils.isNetConnected(application)) {
-                request = request.newBuilder()
-                        .cacheControl(TextUtils.isEmpty(cacheControl) ? CacheControl.FORCE_NETWORK : CacheControl.FORCE_CACHE)
+            Response response = chain.proceed(request);
+            if (Futils.isNetConnected(application)) {
+                return response.newBuilder()
+                        .removeHeader("Pragma")
+                        .removeHeader("Cache-Control")
+                        .header("Cache-Control", "public, max-age=" + CACHE_STALE_SEC)
                         .build();
             }
+            return response;
+        }
+    };
+    /**
+     * 云端响应头拦截器，用来配置缓存策略
+     */
+    private final Interceptor network = new Interceptor() {
+        @Override
+        public Response intercept(Chain chain) throws IOException {
+            // 获取请求
+            Request request = chain.request();
+            // 获取缓存配置
+            String cacheControl = request.cacheControl().toString();
             Response originalResponse = chain.proceed(request);
             if (Futils.isNetConnected(application)) {
                 //有网的时候读接口上的@Headers里的配置，你可以在这里进行统一的设置
-
                 return originalResponse.newBuilder()
                         .header("Cache-Control", cacheControl)
                         .removeHeader("Pragma")
@@ -215,6 +232,24 @@ public class Api {
             }
         }
     };
-
+    /**
+     * 云端响应头拦截器，用来配置缓存策略
+     */
+    private final Interceptor offline = new Interceptor() {
+        @Override
+        public Response intercept(Chain chain) throws IOException {
+            // 获取请求
+            Request request = chain.request();
+            // 没有网络直接传从缓存获取
+            if (!Futils.isNetConnected(application)) {
+                request = request.newBuilder()
+                        .cacheControl(CacheControl.FORCE_CACHE)
+                        .build();
+            }
+            // 从上述请求中直接获取响应
+            Response originalResponse = chain.proceed(request);
+            return originalResponse;
+        }
+    };
 
 }
