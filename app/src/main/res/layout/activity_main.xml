@@ -50,4 +50,27 @@
         android:layout_alignParentStart="true"
         android:layout_marginBottom="13dp"
         android:id="@+id/title" />
+
+    <Button
+        android:text="开起推送"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_marginBottom="33dp"
+        android:onClick="openpush"
+        android:id="@+id/button5" />
+
+    <Button
+        android:text="关闭推送"
+        android:onClick="closepush"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@+id/button5"
+        android:layout_alignLeft="@+id/button"
+        android:layout_alignStart="@+id/button"
+        android:layout_marginLeft="50dp"
+        android:layout_marginStart="50dp"
+        android:id="@+id/button6" />
 </RelativeLayout>

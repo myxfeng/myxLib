@@ -11,8 +11,11 @@ import android.widget.TextView;
 
 
 import com.facebook.drawee.view.SimpleDraweeView;
+import com.igexin.sdk.PushManager;
 import com.myx.feng.app.ApiServiceTest;
 import com.myx.feng.app.App;
+import com.myx.feng.getui.DemoIntentService;
+import com.myx.feng.getui.DemoPushService;
 import com.myx.library.image.ImageUtils;
 import com.myx.library.rxjava.Api;
 import com.myx.library.rxjava.RxSchedulers;
@@ -60,6 +63,9 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onNext(NewsResult newsResult) {
+
+
+
                 ToastUtils.showShort(MainActivity.this, newsResult.getData().getCover());
 //                ImageUtils.loadBitmapOnlyWifi(newsResult.getData().getCover(), image, false, 0);
                 ImageUtils.test(newsResult.getData().getCover(), new ImageUtils.ImageCallBack() {
@@ -94,9 +100,18 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onNext(CollectResult newsResult) {
+
                 ToastUtils.showShort(MainActivity.this, newsResult.getData().get(0).getNews_title());
                 title.setText(newsResult.getData().get(0).getNews_title());
             }
         });
+    }
+
+    public void openpush(View view){
+        PushManager.getInstance().initialize(MainActivity.this, DemoPushService.class);
+        PushManager.getInstance().registerPushIntentService(MainActivity.this, DemoIntentService.class);
+    }
+    public void closepush(View view){
+        PushManager.getInstance().stopService(MainActivity.this);
     }
 }
