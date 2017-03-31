@@ -1,14 +1,16 @@
 package com.myx.feng;
 
-import android.widget.ListView;
+import com.myx.feng.rxjavademo.NewsData;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
  * Created by mayuxin on 2017/3/24.
  */
 
-public class CollectResult {
+public class CollectResult implements Serializable{
+    private static final long serialVersionUID = -6431337010254835338L;
     private List<NewsData> data;
 
     public List<NewsData> getData() {

@@ -280,6 +280,7 @@ public class Futils {
         activity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
     }
     /**
+     * 获取手机系统的版本号
      * @return String
      */
     public static String getOSVersion() {
@@ -445,5 +446,31 @@ public class Futils {
 
         }
         return  hashMap;
+    }
+    public static int dip2px(Context context, float dipValue) {
+        if (context != null) {
+            final float scale = context.getResources().getDisplayMetrics().density;
+            return (int) (dipValue * scale + 0.5f);
+        } else {
+            return 0;
+        }
+    }
+
+    public static int px2dip(Context context, float pxValue) {
+        if (context != null) {
+            final float scale = context.getResources().getDisplayMetrics().density;
+            return (int) (pxValue / scale + 0.5f);
+        } else {
+            return 0;
+        }
+    }
+
+    public static float sp2px(Context context, float sp) {
+        if (context != null) {
+            final float scale = context.getResources().getDisplayMetrics().scaledDensity;
+            return sp * scale;
+        } else {
+            return 0;
+        }
     }
 }
