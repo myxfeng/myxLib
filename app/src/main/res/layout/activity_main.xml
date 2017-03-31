@@ -73,4 +73,17 @@
         android:layout_marginLeft="50dp"
         android:layout_marginStart="50dp"
         android:id="@+id/button6" />
+
+    <Button
+        android:text="threadNof"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/button5"
+        android:layout_toRightOf="@+id/title"
+        android:layout_toEndOf="@+id/title"
+        android:layout_marginLeft="56dp"
+        android:layout_marginStart="56dp"
+        android:layout_marginBottom="136dp"
+        android:onClick="threadNof"
+        android:id="@+id/button3" />
 </RelativeLayout>
