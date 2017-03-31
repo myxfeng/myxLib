@@ -56,6 +56,21 @@ public class MainActivity extends AppCompatActivity {
             public void superError(Throwable e) {
 
             }
+
+            @Override
+            public void onNext(NewsResult newsResult) {
+
+
+
+                ToastUtils.showShort(MainActivity.this, newsResult.getData().getCover());
+//                ImageUtils.loadBitmapOnlyWifi(newsResult.getData().getCover(), image, false, 0);
+                ImageUtils.test(newsResult.getData().getCover(), new ImageUtils.ImageCallBack() {
+                    @Override
+                    public void onSuccess(String imgaeUrl, File file) {
+                        image.setImageBitmap(BitmapFactory.decodeFile(file.getPath()));
+                    }
+                });
+            }
         });
     }
 
@@ -83,38 +98,18 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onNext(CollectResult newsResult) {
                 ACache.get(MainActivity.this).put(titlekey,newsResult);
+
                 ToastUtils.showShort(MainActivity.this, newsResult.getData().get(0).getNews_title());
                 title.setText(newsResult.getData().get(0).getNews_title());
             }
         });
     }
 
-    public static void testaa() {
-//        Foo foo = new Foo("这个一个Foo对象！");
-//        Class clazz = foo.getClass();
-//        Method m1 = clazz.getDeclaredMethod("outInfo");
-//        Method m2 = clazz.getDeclaredMethod("setMsg", String.class);
-//        Method m3 = clazz.getDeclaredMethod("getMsg");
-//        m1.invoke(foo);
-//        m2.invoke(foo, "重新设置msg信息！");
-//        String msg = (String) m3.invoke(foo);
-//        System.out.println(msg);
-
-
-//        Class<?> threadClazz = Class.forName("java.lang.Math");
-//        Method method = threadClazz.getMethod("abs", long.class);
-//        System.out.println(method.invoke(null, -10000l));
-
-        try {
-            Class<?> cls = Class.forName("okhttp3.internal.Util");
-            try {
-                Method method = cls.getDeclaredMethod("md5Hex", String.class);
-                method.setAccessible(true);
-            } catch (NoSuchMethodException e) {
-                e.printStackTrace();
-            }
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-        }
+    public void openpush(View view){
+        PushManager.getInstance().initialize(MainActivity.this, DemoPushService.class);
+        PushManager.getInstance().registerPushIntentService(MainActivity.this, DemoIntentService.class);
+    }
+    public void closepush(View view){
+        PushManager.getInstance().stopService(MainActivity.this);
     }
 }
