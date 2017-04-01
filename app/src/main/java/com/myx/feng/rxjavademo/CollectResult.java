@@ -1,4 +1,4 @@
-package com.myx.feng;
+package com.myx.feng.rxjavademo;
 
 import com.myx.feng.rxjavademo.NewsData;
 

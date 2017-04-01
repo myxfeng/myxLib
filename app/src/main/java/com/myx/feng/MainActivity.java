@@ -21,6 +21,7 @@ import com.myx.feng.app.ApiServiceTest;
 import com.myx.feng.getui.DemoIntentService;
 import com.myx.feng.getui.Main2Activity;
 import com.myx.feng.rxjavademo.CaheSubscribe;
+import com.myx.feng.rxjavademo.CollectResult;
 import com.myx.feng.rxjavademo.NewsResult;
 import com.myx.library.image.ImageUtils;
 import com.myx.library.rxjava.Api;

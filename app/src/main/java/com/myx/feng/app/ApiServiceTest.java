@@ -1,6 +1,6 @@
 package com.myx.feng.app;
 
-import com.myx.feng.CollectResult;
+import com.myx.feng.rxjavademo.CollectResult;
 import com.myx.feng.rxjavademo.NewsResult;
 import com.myx.library.rxjava.BaseUrl;
 
