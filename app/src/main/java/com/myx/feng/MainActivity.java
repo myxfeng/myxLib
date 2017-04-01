@@ -72,14 +72,6 @@ public class MainActivity extends AppCompatActivity {
 
             }
 
-            @Override
-            public void onNext(NewsResult newsResult) {
-
-
-                ToastUtils.showShort(MainActivity.this, newsResult.getData().getCover());
-                ImageUtils.loadBitmapOnlyWifi(newsResult.getData().getCover(), image, false, 0);
-
-            }
         });
     }
 
