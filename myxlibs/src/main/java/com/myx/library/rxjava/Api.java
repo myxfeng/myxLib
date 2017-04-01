@@ -250,5 +250,33 @@ public class Api {
             return originalResponse;
         }
     };
+    /**
+     * 云端响应头拦截器，用来配置缓存策略
+     */
+    private final Interceptor off_net = new Interceptor() {
+        @Override
+        public Response intercept(Chain chain) throws IOException {
+            Request request = chain.request();
+            String cacheControl = request.cacheControl().toString();
+            if (!Futils.isNetConnected(application)) {
+                request = request.newBuilder()
+                        .cacheControl(TextUtils.isEmpty(cacheControl) ? CacheControl.FORCE_NETWORK : CacheControl.FORCE_CACHE)
+                        .build();
+            }
+            Response originalResponse = chain.proceed(request);
+            if (Futils.isNetConnected(application)) {
+                //有网的时候读接口上的@Headers里的配置，你可以在这里进行统一的设置
 
+                return originalResponse.newBuilder()
+                        .header("Cache-Control", cacheControl)
+                        .removeHeader("Pragma")
+                        .build();
+            } else {
+                return originalResponse.newBuilder()
+                        .header("Cache-Control", "public, only-if-cached, max-stale=" + CACHE_STALE_SEC)
+                        .removeHeader("Pragma")
+                        .build();
+            }
+        }
+    };
 }

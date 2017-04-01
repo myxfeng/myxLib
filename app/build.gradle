@@ -1,13 +1,13 @@
 apply plugin: 'com.android.application'
 
 android {
-    compileSdkVersion Integer.parseInt(COMPILE_SDK_VERSION)
-    buildToolsVersion BUILDTOOLS_VERSION
+    compileSdkVersion project.compileSdkVersion
+    buildToolsVersion project.buildToolsVersion
 
     defaultConfig {
         applicationId "com.myx.feng"
         minSdkVersion project.minSdkVersion
-        targetSdkVersion Integer.parseInt(TARGET_SDK_VERSION)
+        targetSdkVersion project.targetSdkVersion
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
@@ -62,16 +62,16 @@ dependencies {
     compile "com.android.support:appcompat-v7:${project.supportLib}"
     compile "com.android.support:design:${project.supportLib}"
     testCompile 'junit:junit:4.12'
-    //    compile 'com.myx.library:futils:1.0.1'
 
     compile project(':myxlibs')
+
     compile 'com.jakewharton:butterknife:8.4.0'
-    compile 'com.getui:sdk:2.10.2.0'
-    compile 'com.android.support:design:25.3.0'
-    testCompile 'junit:junit:4.12'
     annotationProcessor 'com.jakewharton:butterknife-compiler:8.4.0'
+
+
+    compile 'com.getui:sdk:2.10.2.0'
 
 }
 def loadParams(String name) {
-    return hasProperty(name) ? getProperty(name) : "MISSING"
+    return hasProperty(name) ? getProperty(name) : ""
 }

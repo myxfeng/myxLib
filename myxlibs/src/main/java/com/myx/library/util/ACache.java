@@ -48,9 +48,7 @@ import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicLong;
 
-/**
- * @author Michael Yang（www.yangfuhai.com） update at 2013.08.07
- */
+
 public class ACache {
     public static final int TIME_HOUR = 60 * 60;
     public static final int TIME_DAY = TIME_HOUR * 24;
@@ -579,9 +577,7 @@ public class ACache {
     }
 
     /**
-     * @title 缓存管理器
-     * @author 杨福海（michael） www.yangfuhai.com
-     * @version 1.0
+     * 缓存管理器
      */
     public class ACacheManager {
         private final AtomicLong cacheSize;
