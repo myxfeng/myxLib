@@ -38,7 +38,7 @@ android {
                     GETUI_APP_KEY   : "${loadParams("RELEASE_GETUI_APP_KEY")}",
                     GETUI_APP_SECRET: "${loadParams("RELEASE_GETUI_APP_SECRET")}"
             ]
-            minifyEnabled false
+            minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
         debug {
@@ -61,17 +61,20 @@ dependencies {
     })
     compile "com.android.support:appcompat-v7:${project.supportLib}"
     compile "com.android.support:design:${project.supportLib}"
-    testCompile 'junit:junit:4.12'
 
     compile project(':myxlibs')
 
+
+
+
     compile 'com.jakewharton:butterknife:8.4.0'
-    annotationProcessor 'com.jakewharton:butterknife-compiler:8.4.0'
-
-
     compile 'com.getui:sdk:2.10.2.0'
-
+    compile 'com.android.support:support-v4:25.3.1'
+    compile 'com.android.support:recyclerview-v7:25.3.1'
+    testCompile 'junit:junit:4.12'
+    annotationProcessor 'com.jakewharton:butterknife-compiler:8.4.0'
 }
+
 def loadParams(String name) {
     return hasProperty(name) ? getProperty(name) : ""
 }

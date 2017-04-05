@@ -20,6 +20,7 @@ import com.igexin.sdk.PushManager;
 import com.myx.feng.app.ApiServiceTest;
 import com.myx.feng.getui.DemoIntentService;
 import com.myx.feng.getui.Main2Activity;
+import com.myx.feng.recyclerviewdemo.RecyclerActivity;
 import com.myx.feng.rxjavademo.CaheSubscribe;
 import com.myx.feng.rxjavademo.CollectResult;
 import com.myx.feng.rxjavademo.NewsResult;
@@ -48,7 +49,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        context=this;
+        context = this;
         ButterKnife.bind(this);
 
 //        image= (SimpleDraweeView) findViewById(R.id.img);
@@ -114,8 +115,8 @@ public class MainActivity extends AppCompatActivity {
         //注册推送服务
         PushManager.getInstance().registerPushIntentService(context, DemoIntentService.class);
         // 绑定别名
-        PushManager.getInstance().bindAlias(context,"1111");
-        if(!PushManager.getInstance().isPushTurnedOn(context)){
+        PushManager.getInstance().bindAlias(context, "1111");
+        if (!PushManager.getInstance().isPushTurnedOn(context)) {
             PushManager.getInstance().turnOnPush(context);
         }
     }
@@ -125,7 +126,7 @@ public class MainActivity extends AppCompatActivity {
         PushManager.getInstance().turnOffPush(MainActivity.this);
     }
 
-    public void threadNof(View view){
+    public void threadNof(View view) {
         Intent intent = new Intent(context, Main2Activity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
         Bitmap btm = BitmapFactory.decodeResource(context.getResources(), R.mipmap.ic_launcher);
@@ -138,7 +139,7 @@ public class MainActivity extends AppCompatActivity {
 //        mRemoteViews.setImageViewResource(R.id.icon, R.drawable.ic_launcher);
 //        mRemoteViews.setTextViewText(R.id.time, getTime());
 
-        String data="从子线程发出的notif";
+        String data = "从子线程发出的notif";
         NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
         Notification n = new NotificationCompat.Builder(context)
                 .setSmallIcon(R.mipmap.ic_launcher)
@@ -152,5 +153,9 @@ public class MainActivity extends AppCompatActivity {
         n.defaults |= Notification.DEFAULT_VIBRATE;
         int nextInt = new Random().nextInt(10000);
         notificationManager.notify(nextInt, n);
+    }
+
+    public void jumprecyclerview(View view) {
+        startActivity(new Intent(MainActivity.this, RecyclerActivity.class));
     }
 }

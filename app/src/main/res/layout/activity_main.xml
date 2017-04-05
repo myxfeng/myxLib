@@ -86,4 +86,15 @@
         android:layout_marginBottom="136dp"
         android:onClick="threadNof"
         android:id="@+id/button3" />
+
+    <Button
+        android:text="跳转reccylerview"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/button3"
+        android:layout_alignRight="@+id/button3"
+        android:layout_alignEnd="@+id/button3"
+        android:layout_marginTop="14dp"
+        android:onClick="jumprecyclerview"
+        android:id="@+id/button4" />
 </RelativeLayout>
