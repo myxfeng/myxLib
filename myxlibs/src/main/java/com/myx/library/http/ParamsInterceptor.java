@@ -33,7 +33,7 @@ public abstract class ParamsInterceptor implements Interceptor {
                     urlBuilder.addQueryParameter(entry.getKey(), entry.getValue());
                 }
             }
-        } else if ("POST".equals(original.method())) {// POST 请求的参数是放在body 体中
+        } else if ("POST".equals(original.method())) {// POST 请求的参数是放在Form表单body 体中
             if (requestBody instanceof FormBody) {
                 FormBody.Builder formBuilder = new FormBody.Builder();
                 // 添加已有参数
@@ -57,6 +57,15 @@ public abstract class ParamsInterceptor implements Interceptor {
                 // 添加公共参数
                 multiBuilder.addPart(HttpUtil.hasMapToBody(getParams()));
                 requestBody=multiBuilder.build();
+            }else {
+                HashMap<String, String> params = getParams();
+                if (params != null && params.size() > 0) {
+                    Iterator<Map.Entry<String, String>> iterator = params.entrySet().iterator();
+                    while (iterator.hasNext()) {
+                        Map.Entry<String, String> entry = iterator.next();
+                        urlBuilder.addQueryParameter(entry.getKey(), entry.getValue());
+                    }
+                }
             }
 
 

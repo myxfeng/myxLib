@@ -13,7 +13,7 @@ public class BasePresenter<T extends BaseView, E extends BaseModel> {
     public Context mContext;
     public T mView;
     public E mModel;
-    RxManager rxManager = new RxManager();
+    public RxManager mRxManager = new RxManager();
 
     public void setVM(T v, E m) {
         this.mView = v;
@@ -24,9 +24,8 @@ public class BasePresenter<T extends BaseView, E extends BaseModel> {
     public void onStart() {
     }
 
-    ;
 
     public void onDestroy() {
-        rxManager.clear();
+        mRxManager.clear();
     }
 }

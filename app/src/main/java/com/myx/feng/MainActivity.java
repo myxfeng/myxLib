@@ -5,10 +5,13 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.ShortcutManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.RequiresApi;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.app.NotificationCompat;
 import android.view.View;
@@ -18,11 +21,14 @@ import android.widget.TextView;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.igexin.sdk.PushManager;
 import com.myx.feng.app.ApiServiceTest;
+import com.myx.feng.cycleviewdemo.CyclerViewActivity;
 import com.myx.feng.getui.DemoIntentService;
 import com.myx.feng.getui.Main2Activity;
+import com.myx.feng.mvpdemo.MvpActivity;
 import com.myx.feng.recyclerviewdemo.RecyclerActivity;
 import com.myx.feng.rxjavademo.CaheSubscribe;
 import com.myx.feng.rxjavademo.CollectResult;
+import com.myx.feng.rxjavademo.NewsData;
 import com.myx.feng.rxjavademo.NewsResult;
 import com.myx.library.image.ImageUtils;
 import com.myx.library.rxjava.Api;
@@ -45,6 +51,7 @@ public class MainActivity extends AppCompatActivity {
     @BindView(R.id.title)
     TextView title;
 
+    @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -61,7 +68,7 @@ public class MainActivity extends AppCompatActivity {
     String titlekey = "fdsfsd";
 
     public void postImg(View view) {
-        Api.getDefault(ApiServiceTest.ApiService.class).getDetail("2095260387443712_cms_2095260387443712", Api.CACHE_CONTROL_AGE, "11").compose(RxSchedulers.<NewsResult>io_main()).subscribe(new CaheSubscribe<NewsResult>(this, imgkey, false, true) {
+        Api.getDefault(ApiServiceTest.ApiService.class).getDetail("2095260387443712_cms_2095260387443712", "时间").compose(RxSchedulers.<NewsResult>io_main()).subscribe(new CaheSubscribe<NewsResult>(this, imgkey, false, true) {
             @Override
             public void superNext(NewsResult newsResult) {
                 ToastUtils.showShort(MainActivity.this, newsResult.getData().getCover() + "==" + newsResult.getResult().getSource());
@@ -157,5 +164,34 @@ public class MainActivity extends AppCompatActivity {
 
     public void jumprecyclerview(View view) {
         startActivity(new Intent(MainActivity.this, RecyclerActivity.class));
+    }
+
+    public void jumpMvp(View view) {
+        startActivity(new Intent(this, MvpActivity.class));
+    }
+
+    public void jumpCycler(View view) {
+        startActivity(new Intent(this, CyclerViewActivity.class));
+    }
+
+    public void postBody(View view) {
+        NewsData data = new NewsData();
+        data.setArticleid("2095260387443712_cms_2095260387443712");
+        Api.getDefault(ApiServiceTest.ApiService.class).getDetail(data).compose(RxSchedulers.<NewsResult>io_main()).subscribe(new Subscriber<NewsResult>() {
+            @Override
+            public void onCompleted() {
+
+            }
+
+            @Override
+            public void onError(Throwable e) {
+
+            }
+
+            @Override
+            public void onNext(NewsResult newsResult) {
+
+            }
+        });
     }
 }

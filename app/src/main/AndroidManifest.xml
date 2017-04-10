@@ -61,7 +61,9 @@
         <activity
             android:name=".recyclerviewdemo.RecyclerActivity"
             android:label="@string/title_activity_recycler"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity android:name=".mvpdemo.MvpActivity" />
+        <activity android:name=".cycleviewdemo.CyclerViewActivity"></activity>
     </application>
 
 </manifest>
