@@ -14,6 +14,11 @@ android {
         ndk {
             abiFilters "armeabi", "armeabi-v7a", "x86_64", "x86"
         }
+        javaCompileOptions {
+            annotationProcessorOptions {
+                arguments = [ moduleName : project.getName() ]
+            }
+        }
 
     }
     signingConfigs {
@@ -32,6 +37,9 @@ android {
     }
     buildTypes {
         release {
+//            debugf("gt_id=111111\ngt_name=asdasdas")
+//            fileWrite(rootDir.getAbsolutePath()+"/test.properties",getPropertiesValue(rootDir.getAbsolutePath()+"/app.properties","gt_id"))
+            writeDebugInfo()
             signingConfig signingConfigs.release
             manifestPlaceholders = [
                     GETUI_APP_ID    : "${loadParams("RELEASE_GETUI_APP_ID")}",
@@ -63,13 +71,78 @@ dependencies {
     //    compile 'com.myx.library:futils:1.0.1'
 
     compile project(':myxlibs')
-    compile 'com.jakewharton:butterknife:8.4.0'
+    // appcompat v7 包是必须的
+    // 如果想使用 SwipeBack 滑动边缘退出 Fragment/Activity 功能，请再添加下面的库
+// compile 'me.yokeyword:fragmentation-swipeback:0.7.9'
     compile 'com.getui:sdk:2.10.2.0'
     compile 'com.android.support:design:25.3.0'
+    compile 'me.yokeyword:fragmentation:0.10.3'
+    compile 'com.android.support:support-v4:25.3.0'
     testCompile 'junit:junit:4.12'
-    annotationProcessor 'com.jakewharton:butterknife-compiler:8.4.0'
+
+    compile 'com.jakewharton:butterknife:8.5.1'
+    annotationProcessor 'com.jakewharton:butterknife-compiler:8.5.1'
+
+    compile 'com.alibaba:arouter-api:1.2.1'
+    annotationProcessor 'com.alibaba:arouter-compiler:1.1.2'
 
 }
+
+
 def loadParams(String name) {
     return hasProperty(name) ? getProperty(name) : "MISSING"
 }
+
+//读取文件并替换字符串
+
+def fileReader(path, oldStr, newStr) {
+    def readerString = "";
+    new File(path).withReader('UTF-8') { reader ->
+        reader.eachLine {
+            if (it.find(oldStr)) {
+                it = it.replace(oldStr, newStr)
+            }
+            readerString <<= it
+            readerString << '\n'
+        }
+
+        return readerString
+    }
+}
+def fileReader(path) {
+    HashMap<String,String> data=new HashMap<>();
+    new File(path).withReader('UTF-8') { reader ->
+        reader.eachLine {
+            String [] item=it.split("=");
+            data.put(item[0],item[1]);
+        }
+        return data
+    }
+}
+def getPropertiesValue(path,key){
+    def value="";
+    new File(path).withReader('UTF-8') { reader ->
+        reader.eachLine {
+            String [] item=it.split("=");
+            if(item[0].equals(key)){
+                value= item[1]
+            }
+        }
+        return value;
+    }
+}
+def writeDebugInfo(){
+    fileWrite(rootDir.getAbsolutePath()+"/app.properties","GETUI_APP_ID="+loadParams("DEBUG_GETUI_APP_ID")+"\n"+"GETUI_APP_KEY="+loadParams("DEBUG_GETUI_APP_KEY")+"\n"+"GETUI_APP_SECRET="+loadParams("DEBUG_GETUI_APP_SECRET"))
+}
+def writeReleaseInfo(){
+    fileWrite(rootDir.getAbsolutePath()+"/app.properties","GETUI_APP_ID="+loadParams("DEBUG_GETUI_APP_ID")+"\n"+"GETUI_APP_KEY="+loadParams("DEBUG_GETUI_APP_KEY")+"\n"+"GETUI_APP_SECRET="+loadParams("DEBUG_GETUI_APP_SECRET"))
+}
+//写文件
+def fileWrite(path, stringBuffer) {
+    new File(path).withWriter('UTF-8') {
+        within ->
+            within.append(stringBuffer)
+    }
+}
+
+

@@ -1,5 +1,16 @@
 apply plugin: 'com.android.library'
 apply plugin: 'com.novoda.bintray-release'//添加
+apply plugin: 'com.jakewharton.butterknife'
+buildscript {
+    repositories {
+        jcenter()
+    }
+    dependencies {
+        classpath 'com.jakewharton:butterknife-gradle-plugin:8.5.1'
+        // NOTE: Do not place your application dependencies here; they belong
+        // in the individual module build.gradle files
+    }
+}
 android {
     compileSdkVersion 24
     buildToolsVersion "25.0.2"
@@ -14,12 +25,19 @@ android {
         versionName "1.0"
 
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+//        manifestPlaceholders=[GETUI_APP_ID:"11",GETUI_APP_KEY:"22",GETUI_APP_SECRET:"33"]
 
     }
     buildTypes {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+//            manifestPlaceholders=[GETUI_APP_ID:"11",GETUI_APP_KEY:"22",GETUI_APP_SECRET:"33"]
+        }
+        debug {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+//            manifestPlaceholders=[GETUI_APP_ID:"11",GETUI_APP_KEY:"22",GETUI_APP_SECRET:"33"]
         }
     }
 }
@@ -62,8 +80,8 @@ dependencies {
     compile "com.google.code.gson:gson:2.6.2"
 
     //view注解
-    compile 'com.jakewharton:butterknife:8.4.0'
-    annotationProcessor 'com.jakewharton:butterknife-compiler:8.4.0'
+    compile 'com.jakewharton:butterknife:8.5.1'
+    annotationProcessor 'com.jakewharton:butterknife-compiler:8.5.1'
 }
 //添加
 publish {
@@ -75,3 +93,25 @@ publish {
     desc = 'android utils'
     website = 'https://github.com/myxfeng/myxLib'
 }
+//def getId(){
+//    return getPropertiesValue(rootDir.getAbsolutePath()+"/app.properties","GETUI_APP_ID")
+//}
+//def getKey(){
+//    return getPropertiesValue(rootDir.getAbsolutePath()+"/app.properties","GETUI_APP_KEY")
+//}
+//def getSecret(){
+//    return getPropertiesValue(rootDir.getAbsolutePath()+"/app.properties","GETUI_APP_SECRET")
+//}
+//def getPropertiesValue(path,key){
+//    def value="";
+//    new File(path).withReader('UTF-8') { reader ->
+//        reader.eachLine {
+//            String [] item=it.split("=");
+//            if(item[0].equals(key)){
+//                value= item[1]
+//            }
+//        }
+//        return value;
+//    }
+//}
+

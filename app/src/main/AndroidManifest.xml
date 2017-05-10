@@ -38,8 +38,8 @@
 
         <activity
             android:name=".getui.Main2Activity"
-
             android:theme="@style/AppTheme.NoActionBar" />
+        <activity android:name=".TestFragmentActivity"></activity>
     </application>
 
 </manifest>
