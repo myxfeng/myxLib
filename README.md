@@ -19,6 +19,7 @@ PreferenceUtils : 存储工具<br/>
 RsaEncoder  : rsa 加密解密<br/>
 StatusBarCompat : md 风格 状态栏<br/>
 ToastUtils   : Toast<br/>
+NetWorkUtils  :网络检查<br/>
 
 自定义view:
 ===========

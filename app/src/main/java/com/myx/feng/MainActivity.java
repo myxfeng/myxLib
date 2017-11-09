@@ -18,13 +18,13 @@ import android.view.View;
 import android.widget.TextView;
 
 
-import com.facebook.drawee.view.SimpleDraweeView;
 import com.igexin.sdk.PushManager;
 import com.myx.feng.app.ApiServiceTest;
 import com.myx.feng.cycleviewdemo.CyclerViewActivity;
 import com.myx.feng.getui.DemoIntentService;
 import com.myx.feng.getui.Main2Activity;
 import com.myx.feng.mvpdemo.MvpActivity;
+import com.myx.feng.nativeweb.NativeWebActivity;
 import com.myx.feng.recyclerviewdemo.RecyclerActivity;
 import com.myx.feng.rxjavademo.CaheSubscribe;
 import com.myx.feng.rxjavademo.CollectResult;
@@ -45,8 +45,8 @@ import rx.Subscriber;
 
 public class MainActivity extends AppCompatActivity {
     Context context;
-    @BindView(R.id.img)
-    SimpleDraweeView image;
+//    @BindView(R.id.img)
+
 
     @BindView(R.id.title)
     TextView title;
@@ -60,28 +60,28 @@ public class MainActivity extends AppCompatActivity {
         ButterKnife.bind(this);
 
 //        image= (SimpleDraweeView) findViewById(R.id.img);
-        image.setBackgroundColor(Color.parseColor("#465568"));
+//        image.setBackgroundColor(Color.parseColor("#465568"));
 
     }
 
     String imgkey = "121231";
     String titlekey = "fdsfsd";
 
-    public void postImg(View view) {
-        Api.getDefault(ApiServiceTest.ApiService.class).getDetail("2095260387443712_cms_2095260387443712", "时间").compose(RxSchedulers.<NewsResult>io_main()).subscribe(new CaheSubscribe<NewsResult>(this, imgkey, false, true) {
-            @Override
-            public void superNext(NewsResult newsResult) {
-                ToastUtils.showShort(MainActivity.this, newsResult.getData().getCover() + "==" + newsResult.getResult().getSource());
-                ImageUtils.loadBitmapOnlyWifi(newsResult.getData().getCover(), image, false, 0);
-            }
-
-            @Override
-            public void superError(Throwable e) {
-
-            }
-
-        });
-    }
+//    public void postImg(View view) {
+//        Api.getDefault(ApiServiceTest.ApiService.class).getDetail("2095260387443712_cms_2095260387443712", "时间").compose(RxSchedulers.<NewsResult>io_main()).subscribe(new CaheSubscribe<NewsResult>(this, imgkey, false, true) {
+//            @Override
+//            public void superNext(NewsResult newsResult) {
+//                ToastUtils.showShort(MainActivity.this, newsResult.getData().getCover() + "==" + newsResult.getResult().getSource());
+//                ImageUtils.loadBitmapOnlyWifi(newsResult.getData().getCover(), image, false, 0);
+//            }
+//
+//            @Override
+//            public void superError(Throwable e) {
+//
+//            }
+//
+//        });
+//    }
 
     //    ToastUtils.showShort(MainActivity.this, newsResult.getData().getCover());
 ////                ImageUtils.loadBitmapOnlyWifi(newsResult.getData().getCover(), image, false, 0);
@@ -91,28 +91,28 @@ public class MainActivity extends AppCompatActivity {
 //            image.setImageBitmap(BitmapFactory.decodeFile(file.getPath()));
 //        }
 //    });
-    public void getTitle(View view) {
-        Api.getDefault(ApiServiceTest.UserService.class).syncCollect("f145e922e7c24e9cab3e7e457ff30cd4v5HT5f9z", Api.CACHE_CONTROL_AGE).compose(RxSchedulers.<CollectResult>io_main()).subscribe(new Subscriber<CollectResult>() {
-            @Override
-            public void onCompleted() {
-
-            }
-
-            @Override
-            public void onError(Throwable e) {
-                CollectResult dddd = (CollectResult) ACache.get(MainActivity.this).getAsObject(titlekey);
-                onNext(dddd);
-            }
-
-            @Override
-            public void onNext(CollectResult newsResult) {
-                ACache.get(MainActivity.this).put(titlekey, newsResult);
-
-                ToastUtils.showShort(MainActivity.this, newsResult.getData().get(0).getNews_title());
-                title.setText(newsResult.getData().get(0).getNews_title());
-            }
-        });
-    }
+//    public void getTitle(View view) {
+//        Api.getDefault(ApiServiceTest.UserService.class).syncCollect("f145e922e7c24e9cab3e7e457ff30cd4v5HT5f9z", Api.CACHE_CONTROL_NET).compose(RxSchedulers.<CollectResult>io_main()).subscribe(new Subscriber<CollectResult>() {
+//            @Override
+//            public void onCompleted() {
+//
+//            }
+//
+//            @Override
+//            public void onError(Throwable e) {
+//                CollectResult dddd = (CollectResult) ACache.get(MainActivity.this).getAsObject(titlekey);
+//                onNext(dddd);
+//            }
+//
+//            @Override
+//            public void onNext(CollectResult newsResult) {
+//                ACache.get(MainActivity.this).put(titlekey, newsResult);
+//
+//                ToastUtils.showShort(MainActivity.this, newsResult.getData().get(0).getNews_title());
+//                title.setText(newsResult.getData().get(0).getNews_title());
+//            }
+//        });
+//    }
 
     public void openpush(View view) {
         ToastUtils.showShort(MainActivity.this, "开启");
@@ -174,24 +174,28 @@ public class MainActivity extends AppCompatActivity {
         startActivity(new Intent(this, CyclerViewActivity.class));
     }
 
-    public void postBody(View view) {
-        NewsData data = new NewsData();
-        data.setArticleid("2095260387443712_cms_2095260387443712");
-        Api.getDefault(ApiServiceTest.ApiService.class).getDetail(data).compose(RxSchedulers.<NewsResult>io_main()).subscribe(new Subscriber<NewsResult>() {
-            @Override
-            public void onCompleted() {
-
-            }
-
-            @Override
-            public void onError(Throwable e) {
-
-            }
-
-            @Override
-            public void onNext(NewsResult newsResult) {
-
-            }
-        });
+    public void nativeweb(View view) {
+        startActivity(new Intent(this, NativeWebActivity.class));
     }
+
+//    public void postBody(View view) {
+//        NewsData data = new NewsData();
+//        data.setArticleid("2095260387443712_cms_2095260387443712");
+//        Api.getDefault(ApiServiceTest.ApiService.class).getDetail(data).compose(RxSchedulers.<NewsResult>io_main()).subscribe(new Subscriber<NewsResult>() {
+//            @Override
+//            public void onCompleted() {
+//
+//            }
+//
+//            @Override
+//            public void onError(Throwable e) {
+//
+//            }
+//
+//            @Override
+//            public void onNext(NewsResult newsResult) {
+//
+//            }
+//        });
+//    }
 }

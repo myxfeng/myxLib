@@ -2,7 +2,9 @@
 
 buildscript {
     repositories {
-        jcenter()
+//        jcenter()
+        maven { url 'http://maven.aliyun.com/nexus/content/groups/public' }
+
     }
     dependencies {
         classpath 'com.android.tools.build:gradle:2.2.3'
@@ -15,11 +17,16 @@ buildscript {
 
 allprojects {
     repositories {
-        jcenter()
+//        jcenter()
+        maven { url 'http://maven.aliyun.com/nexus/content/groups/public' }
         mavenCentral()
         maven {
             url "http://mvn.gt.igexin.com/nexus/content/repositories/releases/"
         }
+        maven {
+            url "http://10.10.59.166:8081/nexus/content/repositories/Android/"
+        }
+        maven { url 'https://maven.google.com' }
     }
     tasks.withType(Javadoc) {
         options {
@@ -30,11 +37,11 @@ allprojects {
     }
 }
 ext {
-    supportLib="25.2.0"
-    minSdkVersion = 11
+    supportLib = "25.2.0"
+    minSdkVersion = 16
     targetSdkVersion = 25
-    compileSdkVersion =25
-    buildToolsVersion ="25.0.2"
+    compileSdkVersion = 25
+    buildToolsVersion = "25.0.2"
 }
 
 task clean(type: Delete) {

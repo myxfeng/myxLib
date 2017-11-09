@@ -11,7 +11,7 @@ import rx.Subscriber;
 
 /**
  * 为 retrofit 配置文件缓存
- * 如果使用文件缓存 择请求的Cache-Control :CACHE_CONTROL_AGE
+ * 如果使用文件缓存 择请求的Cache-Control :CACHE_CONTROL_NET
  * 如果客户端所有请求都使用 文件缓存 则可以自定义配置 OkHttpClient.Builder；
  * Created by mayuxin on 2017/3/30.
  */

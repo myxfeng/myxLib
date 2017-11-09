@@ -3,12 +3,11 @@ package com.myx.library.rxjava;
 import android.app.Application;
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
-import android.util.Log;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.myx.library.http.ParamsInterceptor;
 import com.myx.library.util.Futils;
+import com.myx.library.util.UseAgentUtils;
 
 import java.io.File;
 import java.io.IOException;
@@ -65,11 +64,12 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class Api {
 
     //读超时长，单位：毫秒
-    public static final int READ_TIME_OUT = 10000;
+    public static final int READ_TIME_OUT = 20000;
 
     //连接时长，单位：毫秒
-    public static final int CONNECT_TIME_OUT = 10000;
+    public static final int CONNECT_TIME_OUT = 20000;
 
+    public static final int WRITE_TIME_OUT = 20000;
     private Retrofit retrofit;
 
 
@@ -83,15 +83,21 @@ public class Api {
      * 查询缓存的Cache-Control设置，为if-only-cache时只查询缓存而不会请求服务器，max-stale可以配合设置缓存失效时间
      * max-stale 指示客户机可以接收超出超时期间的响应消息。如果指定max-stale消息的值，那么客户机可接收超出超时期指定值之内的响应消息。
      */
-    public static final String CACHE_CONTROL_CACHE = "only-if-cached, max-stale=" + CACHE_STALE_SEC;
+    public static final String CACHE_CONTROL_CACHE = "only-if-cached, max-stale=" + CACHE_STALE_SEC;//CacheControl.FORCE_CACHE
     /**
      * 查询网络的Cache-Control设置，头部Cache-Control设为max-age=0
      * (假如请求了服务器并在a时刻返回响应结果，则在max-age规定的秒数内，浏览器将不会发送对应的请求到服务器，数据由缓存直接返回)时则不会使用缓存而请求服务器
      */
-    public static final String CACHE_CONTROL_AGE = "max-age=0";
+    public static final String CACHE_CONTROL_NET = "max-age=0";
+    /**
+     * 强制不使用缓存，只请求服务器数据
+     */
+//    public static final String CACHE_CONTROL_NO_CACHE = "no-cache";
+
     private static Application application;
     private static OkHttpClient.Builder builder;
     private static ParamsInterceptor paramsInterceptor;
+
 
     /**
      * 自定义okhttpclient
@@ -122,7 +128,11 @@ public class Api {
         Api.application = application;
     }
 
-    private Api(String baseUrl) {
+
+    private Api(String baseUrl, int read_time_out, int connect_time_out, int write_time_out) {
+        if (application == null) {
+            throw new NullPointerException("Api not init at Application onCreate()");
+        }
         OkHttpClient okHttpClient;
         if (builder != null) {
             okHttpClient = builder.build();
@@ -131,7 +141,8 @@ public class Api {
             HttpLoggingInterceptor logInterceptor = new HttpLoggingInterceptor();
             logInterceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
             //缓存
-            File cacheFile = new File(application.getCacheDir(), "cache");
+
+            File cacheFile = new File(application.getExternalCacheDir(), "cache");
             Cache cache = new Cache(cacheFile, 1024 * 1024 * 100); //100Mb
 
             //增加头部信息
@@ -145,12 +156,15 @@ public class Api {
                 }
             };
             OkHttpClient.Builder temp = new OkHttpClient.Builder()
-                    .readTimeout(READ_TIME_OUT, TimeUnit.MILLISECONDS)
-                    .connectTimeout(CONNECT_TIME_OUT, TimeUnit.MILLISECONDS)
+                    .readTimeout(read_time_out, TimeUnit.MILLISECONDS)
+                    .connectTimeout(connect_time_out, TimeUnit.MILLISECONDS)
+                    .writeTimeout(write_time_out, TimeUnit.MILLISECONDS)
+//                    .retryOnConnectionFailure(true)
                     .addInterceptor(mRewriteCacheControlInterceptor)
                     .addNetworkInterceptor(mRewriteCacheControlInterceptor)
                     .addInterceptor(headerInterceptor)
                     .addInterceptor(logInterceptor)
+                    .addInterceptor(new UserAgentInterceptor(UseAgentUtils.getUserAgent(application)))
                     .cache(cache);
             if (paramsInterceptor != null) {
                 temp.addInterceptor(paramsInterceptor);
@@ -166,25 +180,31 @@ public class Api {
                 .build();
     }
 
-    public static <T> T getDefault(Class<T> cls) {
-//        HashMap<String, Object> hash = Futils.getClassValue(cls, BaseUrl.class);
-        HashMap<String, Object> hash = Futils.geBaseUrlValue(cls);
-        String url = hash.get("host").toString() + hash.get("port").toString();
-        String url_key = Futils.getMD5(url);
-        Api retrofitManager = sRetrofitManager.get(url_key);
-        if (retrofitManager == null) {
-            retrofitManager = new Api(url);
-            sRetrofitManager.put(url_key, retrofitManager);
+
+    public static <T> T getDefault(Class<T> cls, String baseUrl, int read_time_out, int connect_time_out, int write_time_out) {
+        String url = baseUrl;
+        if (!TextUtils.isEmpty(url)) {
+            Api retrofitManager = new Api(url, read_time_out, connect_time_out, write_time_out);
+            return retrofitManager.retrofit.create(cls);
+        } else {
+            Api retrofitManager = new Api(url, read_time_out, connect_time_out, write_time_out);
+            return retrofitManager.retrofit.create(cls);
         }
-        return retrofitManager.retrofit.create(cls);
+
     }
+
+    public static <T> T getDefault(Class<T> cls, String baseUrl) {
+        return getDefault(cls, baseUrl, READ_TIME_OUT, CONNECT_TIME_OUT, WRITE_TIME_OUT);
+    }
+
+
 
     /**
      * 根据网络状况获取缓存的策略
      */
     @NonNull
     public static String getCacheControl() {
-        return Futils.isNetConnected(application) ? CACHE_CONTROL_AGE : CACHE_CONTROL_CACHE;
+        return Futils.isNetConnected(application) ? CACHE_CONTROL_NET : CACHE_CONTROL_CACHE;
     }
 
 
@@ -194,74 +214,45 @@ public class Api {
     private final Interceptor mRewriteCacheControlInterceptor = new Interceptor() {
         @Override
         public Response intercept(Chain chain) throws IOException {
-            Request request = chain.request();
-            Response response = chain.proceed(request);
-            if (Futils.isNetConnected(application)) {
-                return response.newBuilder()
-                        .removeHeader("Pragma")
-                        .removeHeader("Cache-Control")
-                        .header("Cache-Control", "public, max-age=" + CACHE_STALE_SEC)
-                        .build();
-            }
-            return response;
-        }
-    };
-    /**
-     * 云端响应头拦截器，用来配置缓存策略
-     */
-    private final Interceptor network = new Interceptor() {
-        @Override
-        public Response intercept(Chain chain) throws IOException {
-            // 获取请求
-            Request request = chain.request();
-            // 获取缓存配置
-            String cacheControl = request.cacheControl().toString();
-            Response originalResponse = chain.proceed(request);
-            if (Futils.isNetConnected(application)) {
-                //有网的时候读接口上的@Headers里的配置，你可以在这里进行统一的设置
-                return originalResponse.newBuilder()
-                        .header("Cache-Control", cacheControl)
-                        .removeHeader("Pragma")
-                        .build();
-            } else {
-                return originalResponse.newBuilder()
-                        .header("Cache-Control", "public, only-if-cached, max-stale=" + CACHE_STALE_SEC)
-                        .removeHeader("Pragma")
-                        .build();
-            }
-        }
-    };
-    /**
-     * 云端响应头拦截器，用来配置缓存策略
-     */
-    private final Interceptor offline = new Interceptor() {
-        @Override
-        public Response intercept(Chain chain) throws IOException {
-            // 获取请求
-            Request request = chain.request();
-            // 没有网络直接传从缓存获取
-            if (!Futils.isNetConnected(application)) {
-                request = request.newBuilder()
-                        .cacheControl(CacheControl.FORCE_CACHE)
-                        .build();
-            }
-            // 从上述请求中直接获取响应
-            Response originalResponse = chain.proceed(request);
-            return originalResponse;
-        }
-    };
-    /**
-     * 云端响应头拦截器，用来配置缓存策略
-     */
-    private final Interceptor off_net = new Interceptor() {
-        @Override
-        public Response intercept(Chain chain) throws IOException {
+//            Request request = chain.request();
+//
+//            if (!NetWorkUtils.isNetConnected(application)) {
+//                // 如果r外部调用没有声明禁止使用缓存/// 不配置默认是有缓存的
+//                if (!request.cacheControl().toString().contains("no-cache")) {
+//                    request = request.newBuilder()
+//                            //强制使用缓存
+//                            .cacheControl(CacheControl.FORCE_CACHE)
+//                            .build();
+//                }
+//            }
+//
+//            Response response = chain.proceed(request);
+//            if (NetWorkUtils.isNetConnected(application)) {
+//                //有网的时候读接口上的@Headers里的配置，你可以在这里进行统一的设置
+//                String cacheControl = request.cacheControl().toString();
+//                Log.e("", cacheControl.toString());
+//                return response.newBuilder()
+//                        .header("Cache-Control", cacheControl)
+//                        .removeHeader("Pragma")
+//                        .build();
+//            } else {
+//                return response.newBuilder()
+//                        .header("Cache-Control", "public, only-if-cached, max-stale=" + CACHE_STALE_SEC)
+//                        .removeHeader("Pragma")
+//                        .build();
+//            }
             Request request = chain.request();
             String cacheControl = request.cacheControl().toString();
             if (!Futils.isNetConnected(application)) {
-                request = request.newBuilder()
-                        .cacheControl(TextUtils.isEmpty(cacheControl) ? CacheControl.FORCE_NETWORK : CacheControl.FORCE_CACHE)
-                        .build();
+                if (!cacheControl.contains(CACHE_CONTROL_NET)){
+                    request = request.newBuilder()
+                            .cacheControl(CacheControl.FORCE_CACHE)
+                            .build();
+                } else{
+                    request = request.newBuilder()
+                            .cacheControl(CacheControl.FORCE_NETWORK)
+                            .build();
+                }
             }
             Response originalResponse = chain.proceed(request);
             if (Futils.isNetConnected(application)) {
@@ -279,4 +270,23 @@ public class Api {
             }
         }
     };
+   /* *//**
+     * 云端响应头拦截器，用来配置缓存策略
+     *//*
+    private final Interceptor mRewriteCacheControlInterceptor = new Interceptor() {
+        @Override
+        public Response intercept(Chain chain) throws IOException {
+            Request request = chain.request();
+            Response response = chain.proceed(request);
+            if (NetWorkUtils.isNetConnected(application)) {
+                return response.newBuilder()
+                        .removeHeader("Pragma")
+                        .removeHeader("Cache-Control")
+                        .header("Cache-Control", "public, max-age=" + CACHE_STALE_SEC)
+                        .build();
+            }
+            return response;
+        }
+    };*/
+
 }

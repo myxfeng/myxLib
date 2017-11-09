@@ -64,6 +64,7 @@
             android:theme="@style/AppTheme.NoActionBar" />
         <activity android:name=".mvpdemo.MvpActivity" />
         <activity android:name=".cycleviewdemo.CyclerViewActivity"></activity>
+        <activity android:name=".nativeweb.NativeWebActivity" />
     </application>
 
 </manifest>
