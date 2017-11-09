@@ -18,6 +18,11 @@ import android.view.inputmethod.InputMethodManager;
 
 import com.myx.library.rxjava.BaseUrl;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 import java.lang.reflect.ParameterizedType;
@@ -28,6 +33,7 @@ import java.net.SocketException;
 import java.security.MessageDigest;
 import java.util.Enumeration;
 import java.util.HashMap;
+import java.util.List;
 
 import static android.view.View.INVISIBLE;
 import static android.view.View.VISIBLE;
@@ -279,7 +285,10 @@ public class Futils {
     public static void setPortrait(Activity activity) {
         activity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
     }
+
     /**
+     * 获取手机系统的版本号
+     *
      * @return String
      */
     public static String getOSVersion() {
@@ -347,12 +356,14 @@ public class Futils {
 
         return (i & 0xFF) + "." + ((i >> 8) & 0xFF) + "." + ((i >> 16) & 0xFF) + "." + (i >> 24 & 0xFF);
     }
+
     public static DisplayMetrics getDisplayMetrics(Context context) {
         return context.getResources().getDisplayMetrics();
     }
 
     /**
      * 获取屏幕高度
+     *
      * @param context
      * @return
      */
@@ -361,7 +372,9 @@ public class Futils {
         return dm.heightPixels;
     }
 
-    /** 获取屏幕宽度
+    /**
+     * 获取屏幕宽度
+     *
      * @param context
      * @return
      */
@@ -372,6 +385,7 @@ public class Futils {
 
     /**
      * 根据泛型获取实例
+     *
      * @param o
      * @param i
      * @param <T>
@@ -381,8 +395,8 @@ public class Futils {
     public static <T> T getT(Object o, int i) {
         try {
             Type type = o.getClass().getGenericSuperclass();
-            Type[] actualTypeArguments = ((ParameterizedType)(type)).getActualTypeArguments();
-            return ((Class<T>)actualTypeArguments[i]).newInstance();
+            Type[] actualTypeArguments = ((ParameterizedType) (type)).getActualTypeArguments();
+            return ((Class<T>) actualTypeArguments[i]).newInstance();
         } catch (InstantiationException | ClassCastException | IllegalAccessException e) {
 //            e.printStackTrace();
         }
@@ -397,7 +411,8 @@ public class Futils {
         }
         return null;
     }
-    public void get(Class cls,Class target){
+
+    public void get(Class cls, Class target) {
 //        Field[] fields = cls.getDeclaredFields();
 //        List<Field> result = new ArrayList<Field>();
 //        for (Field field:fields){
@@ -410,40 +425,173 @@ public class Futils {
 ////            System.out.println("被注解的字段为:"+list.getName());
 //        }
     }
-    public static  HashMap<String,Object> getClassValue(Class cls,Class target){
+
+    public static HashMap<String, Object> getClassValue(Class cls, Class target) {
         Annotation anno = cls.getAnnotation(target);
-        if(anno != null){
+        if (anno != null) {
             Method[] met = anno.annotationType().getDeclaredMethods();
-            HashMap<String,Object> hashMap=new HashMap<>();
-            for(Method me : met ){
-                if(!me.isAccessible()){
+            HashMap<String, Object> hashMap = new HashMap<>();
+            for (Method me : met) {
+                if (!me.isAccessible()) {
                     me.setAccessible(true);
 
                 }
                 try {
-                    hashMap.put(me.getName(),me.invoke(anno, new Object[]{}));
+                    hashMap.put(me.getName(), me.invoke(anno, new Object[]{}));
 //                    System.out.println(me.invoke(anno, null));
                 } catch (Exception e) {
                     e.printStackTrace();
 
                 }
             }
-            return  hashMap;
+            return hashMap;
         }
         return null;
     }
-    public static  HashMap<String,Object> geBaseUrlValue(Class cls){
-        HashMap<String,Object> hashMap=new HashMap<>();
-        try{
+
+    public static HashMap<String, Object> geBaseUrlValue(Class cls) {
+        HashMap<String, Object> hashMap = new HashMap<>();
+        try {
             boolean exist = cls.isAnnotationPresent(BaseUrl.class);
-            if(exist){
+            if (exist) {
                 BaseUrl anno = (BaseUrl) cls.getAnnotation(BaseUrl.class);
-                hashMap.put("host",anno.host());
-                hashMap.put("port",anno.port());
+                hashMap.put("host", anno.host());
+                hashMap.put("port", anno.port());
             }
-        }catch (Exception e){
+        } catch (Exception e) {
 
         }
-        return  hashMap;
+        return hashMap;
+    }
+
+    public static int dip2px(Context context, float dipValue) {
+        if (context != null) {
+            final float scale = context.getResources().getDisplayMetrics().density;
+            return (int) (dipValue * scale + 0.5f);
+        } else {
+            return 0;
+        }
+    }
+
+    public static int px2dip(Context context, float pxValue) {
+        if (context != null) {
+            final float scale = context.getResources().getDisplayMetrics().density;
+            return (int) (pxValue / scale + 0.5f);
+        } else {
+            return 0;
+        }
+    }
+
+    public static float sp2px(Context context, float sp) {
+        if (context != null) {
+            final float scale = context.getResources().getDisplayMetrics().scaledDensity;
+            return sp * scale;
+        } else {
+            return 0;
+        }
+    }
+
+    public Object deepCopy(Object src) {
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        ObjectOutputStream oos = null;
+        ByteArrayInputStream bais = null;
+        ObjectInputStream ois = null;
+        try {
+            oos = new ObjectOutputStream(baos);
+            oos.writeObject(src);
+
+            bais = new ByteArrayInputStream(baos.toByteArray());
+            ois = new ObjectInputStream(bais);
+            return ois.readObject();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        } finally {
+            if (baos != null) {
+                try {
+                    baos.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+            if (oos != null) {
+                try {
+                    oos.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+            if (bais != null) {
+                try {
+                    bais.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+            if (ois != null) {
+                try {
+                    ois.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+        return null;
+    }
+
+    /**深复制 System.copy ,Collection.copy 都是浅复制
+     * @param src
+     * @param <T>
+     * @return
+     */
+    public <T> List<T> deepCopy(List<T> src) {
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        ObjectOutputStream oos = null;
+        ByteArrayInputStream bais = null;
+        ObjectInputStream ois = null;
+        try {
+            oos = new ObjectOutputStream(baos);
+            oos.writeObject(src);
+
+            bais = new ByteArrayInputStream(baos.toByteArray());
+            ois = new ObjectInputStream(bais);
+            return (List<T>) ois.readObject();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        } finally {
+            if (baos != null) {
+                try {
+                    baos.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+            if (oos != null) {
+                try {
+                    oos.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+            if (bais != null) {
+                try {
+                    bais.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+            if (ois != null) {
+                try {
+                    ois.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+        return null;
     }
 }
+

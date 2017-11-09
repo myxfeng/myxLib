@@ -1,6 +1,6 @@
 package com.myx.feng.app;
 
-import com.myx.feng.NewsResult;
+import com.myx.feng.rxjavademo.NewsResult;
 import com.myx.library.rxjava.BaseUrl;
 
 import retrofit2.http.GET;

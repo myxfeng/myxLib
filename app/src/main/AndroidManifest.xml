@@ -13,6 +13,12 @@
     <!-- 个推3.0电子围栏功能所需权限 -->
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <!-- 自定义权限 -->
+    <uses-permission android:name="getui.permission.GetuiService.com.myx.feng" />
+
+    <permission
+        android:name="getui.permission.GetuiService.com.myx.feng"
+        android:protectionLevel="normal" />
 
     <application
         android:name=".app.App"
@@ -20,7 +26,7 @@
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme">
+        android:theme="@style/AppTheme.NoActionBar">
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -28,17 +34,37 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name=".MDActivity">
+
+            <!--
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+            -->
+        </activity>
 
         <service android:name=".getui.DemoIntentService" />
+        <!--
         <service
             android:name=".getui.DemoPushService"
             android:exported="true"
             android:label="PushService"
-            android:process=":pushservice" />
+            android:process=":pushservice">
+        </service>
+        -->
 
         <activity
             android:name=".getui.Main2Activity"
             android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".recyclerviewdemo.RecyclerActivity"
+            android:label="@string/title_activity_recycler"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity android:name=".mvpdemo.MvpActivity" />
+        <activity android:name=".cycleviewdemo.CyclerViewActivity"></activity>
+        <activity android:name=".nativeweb.NativeWebActivity" />
         <activity android:name=".TestFragmentActivity"></activity>
     </application>
 

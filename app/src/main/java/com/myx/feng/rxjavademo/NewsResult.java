@@ -1,16 +1,19 @@
-package com.myx.feng;
+package com.myx.feng.rxjavademo;
 
 import android.os.Parcel;
 import android.os.Parcelable;
+
+import java.io.Serializable;
 
 
 /**
  * Created by mayuxin on 2017/3/17.
  */
 
-public class NewsResult implements Parcelable {
+public class NewsResult extends BaseResult implements Parcelable ,Serializable{
+    private static final long serialVersionUID = 5329812873261315687L;
     private NewsData data;
-
+    private String tag="ok";
     public NewsData getData() {
         return data;
     }
@@ -20,6 +23,15 @@ public class NewsResult implements Parcelable {
     }
 
     public NewsResult() {
+
+    }
+
+    public String getTag() {
+        return tag;
+    }
+
+    public void setTag(String tag) {
+        this.tag = tag;
     }
 
     protected NewsResult(Parcel in) {
