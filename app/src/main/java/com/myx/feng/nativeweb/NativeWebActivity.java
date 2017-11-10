@@ -20,15 +20,10 @@ import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.request.target.SimpleTarget;
-import com.bumptech.glide.request.transition.Transition;
 import com.myx.feng.R;
 import com.myx.library.util.Futils;
 import com.myx.library.util.ToastUtils;
 
-import org.sufficientlysecure.htmltextview.HtmlHttpImageGetter;
-import org.sufficientlysecure.htmltextview.HtmlTextView;
 import org.xml.sax.XMLReader;
 
 import java.net.URL;

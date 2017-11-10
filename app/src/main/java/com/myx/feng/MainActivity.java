@@ -11,13 +11,14 @@ import android.view.View;
 import android.widget.TextView;
 
 
-import com.alibaba.android.arouter.launcher.ARouter;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.igexin.sdk.PushManager;
 import com.myx.feng.app.ApiServiceTest;
-import com.myx.feng.app.App;
+import com.myx.feng.app.AppContans;
 import com.myx.feng.getui.DemoIntentService;
 import com.myx.feng.getui.DemoPushService;
+import com.myx.feng.rxjavademo.CollectResult;
+import com.myx.feng.rxjavademo.NewsResult;
 import com.myx.library.image.ImageUtils;
 import com.myx.library.rxjava.Api;
 import com.myx.library.rxjava.RxSchedulers;
@@ -30,8 +31,6 @@ import java.io.File;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import rx.Subscriber;
-import rx.functions.Action1;
-import rx.functions.Func1;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -41,9 +40,7 @@ public class MainActivity extends AppCompatActivity {
 
     @BindView(R.id.title)
     TextView title;
-//    PUSH_APPID
-//    PUSH_APPKEY
-    // PUSH_APPSECRET
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -53,13 +50,13 @@ public class MainActivity extends AppCompatActivity {
         image.setBackgroundColor(Color.parseColor("#465568"));
 
 //        Futils.getMetaValue();
-        String aa="id:"+Futils.getMetaValue(this,"PUSH_APPID")+"\n key:"+Futils.getMetaValue(this,"PUSH_APPKEY")+"\n secret："+Futils.getMetaValue(this,"PUSH_APPSECRET");
+        String aa = "id:" + Futils.getMetaValue(this, "PUSH_APPID") + "\n key:" + Futils.getMetaValue(this, "PUSH_APPKEY") + "\n secret：" + Futils.getMetaValue(this, "PUSH_APPSECRET");
         title.setText(aa);
     }
 
 
     public void postImg(View view) {
-        Api.getDefault(ApiServiceTest.ApiService.class).getDetail("2095260387443712_cms_2095260387443712", Api.getCacheControl(), "11").compose(RxSchedulers.<NewsResult>io_main()).subscribe(new Subscriber<NewsResult>() {
+        Api.getDefault(ApiServiceTest.ApiService.class, AppContans.SERVER_API).getDetail("2095260387443712_cms_2095260387443712", Api.getCacheControl(), "11").compose(RxSchedulers.<NewsResult>io_main()).subscribe(new Subscriber<NewsResult>() {
             @Override
             public void onCompleted() {
 
@@ -96,7 +93,7 @@ public class MainActivity extends AppCompatActivity {
 //        }
 //    });
     public void getTitle(View view) {
-        Api.getDefault(ApiServiceTest.UserService.class).syncCollect("f145e922e7c24e9cab3e7e457ff30cd4v5HT5f9z").compose(RxSchedulers.<CollectResult>io_main()).subscribe(new Subscriber<CollectResult>() {
+        Api.getDefault(ApiServiceTest.UserService.class, AppContans.SERVER__USER_API).syncCollect("f145e922e7c24e9cab3e7e457ff30cd4v5HT5f9z", Api.CACHE_CONTROL_NET).compose(RxSchedulers.<CollectResult>io_main()).subscribe(new Subscriber<CollectResult>() {
             @Override
             public void onCompleted() {
 
@@ -116,12 +113,12 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    public void openpush(View view){
+    public void openpush(View view) {
         PushManager.getInstance().initialize(MainActivity.this, DemoPushService.class);
         PushManager.getInstance().registerPushIntentService(MainActivity.this, DemoIntentService.class);
     }
-    public void closepush(View view){
-        startActivity(new Intent(this,TestFragmentActivity.class));
+
+    public void closepush(View view) {
         PushManager.getInstance().stopService(MainActivity.this);
     }
 }

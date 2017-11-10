@@ -20,9 +20,6 @@ import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.request.target.SimpleTarget;
-import com.bumptech.glide.request.transition.Transition;
 import com.myx.feng.R;
 import com.myx.library.util.Futils;
 import com.myx.library.util.ToastUtils;
@@ -74,37 +71,6 @@ public class NativeWebView extends TextView {
     private int mViewWidth;//TextView的总宽度
     private TextPaint paint;
 
-//    @Override
-//    protected void onDraw(Canvas canvas) {
-//        mLineY = 0;
-//        mViewWidth = getMeasuredWidth();//获取textview的实际宽度
-//        mLineY += getTextSize();
-//
-//        String text = getText().toString();
-//
-//        Layout layout = getLayout();
-//        int lineCount = layout.getLineCount();
-//        for (int i = 0; i < lineCount; i++) {//每行循环
-//            int lineStart = layout.getLineStart(i);
-//            int lineEnd = layout.getLineEnd(i);
-//            String lineText = text.substring(lineStart, lineEnd);//获取TextView每行中的内容
-//
-//            if (lineText.length() > 0) {
-//                CharSequence charSequence = lineText.subSequence(0, 1);
-//                if (!(charSequence instanceof ImageSpan) && needScale(lineText)) {
-//                    if (i == lineCount - 1) {//最后一行不需要重绘
-//                        canvas.drawText(lineText, 0, mLineY, paint);
-//                    } else {
-//                        float width = StaticLayout.getDesiredWidth(text, lineStart, lineEnd, paint);
-//                        drawScaleText(canvas, lineText, width);
-//                    }
-//                }
-//            } else {
-//                canvas.drawText(lineText, 0, mLineY, paint);
-//            }
-//            mLineY += getLineHeight();//写完一行以后，高度增加一行的高度
-//        }
-//    }
 
     /**
      * 重绘此行.
@@ -165,25 +131,26 @@ public class NativeWebView extends TextView {
 
         @Override
         public Drawable getDrawable(final String source) {
-            Log.e("Test", "source::" + source);
-            final URLDrawable urlDrawable = new NativeWebView.URLDrawable();
-            Glide.with(mContext).load(source).into(new SimpleTarget<Drawable>() {
-                @Override
-                public void onResourceReady(Drawable drawable, Transition<? super Drawable> transition) {
-
-                    float scale = (float) drawable.getIntrinsicHeight() / (float) drawable.getIntrinsicWidth();
-                    drawable.setBounds(0, 0, getImageWidth(), (int) (getImageWidth() * scale));
-                    BitmapDrawable bd = (BitmapDrawable) drawable;
-                    urlDrawable.bitmap = bd.getBitmap();
-                    NativeWebView.this.invalidate();
-                    NativeWebView.this.setText(NativeWebView.this.getText());
-                }
-            });
-            float scale = 0.75f;
-            Drawable drawable = mContext.getResources().getDrawable(R.mipmap.ic_launcher);
-            urlDrawable.bitmap = ((BitmapDrawable) drawable).getBitmap();
-            urlDrawable.setBounds(0, 0, getImageWidth(), (int) (getImageWidth() * scale));
-            return urlDrawable;
+//            Log.e("Test", "source::" + source);
+//            final URLDrawable urlDrawable = new NativeWebView.URLDrawable();
+//            Glide.with(mContext).load(source).into(new SimpleTarget<Drawable>() {
+//                @Override
+//                public void onResourceReady(Drawable drawable, Transition<? super Drawable> transition) {
+//
+//                    float scale = (float) drawable.getIntrinsicHeight() / (float) drawable.getIntrinsicWidth();
+//                    drawable.setBounds(0, 0, getImageWidth(), (int) (getImageWidth() * scale));
+//                    BitmapDrawable bd = (BitmapDrawable) drawable;
+//                    urlDrawable.bitmap = bd.getBitmap();
+//                    NativeWebView.this.invalidate();
+//                    NativeWebView.this.setText(NativeWebView.this.getText());
+//                }
+//            });
+//            float scale = 0.75f;
+//            Drawable drawable = mContext.getResources().getDrawable(R.mipmap.ic_launcher);
+//            urlDrawable.bitmap = ((BitmapDrawable) drawable).getBitmap();
+//            urlDrawable.setBounds(0, 0, getImageWidth(), (int) (getImageWidth() * scale));
+//            return urlDrawable;
+            return null;
         }
     }
 

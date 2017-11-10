@@ -20,13 +20,13 @@ import rx.Observable;
  */
 
 public class ApiServiceTest {
-    @BaseUrl(host = AppContans.SERVER__USER_API)// 用户中心host
+//    @BaseUrl(host = AppContans.SERVER__USER_API)// 用户中心host
     public static interface UserService {
         @GET("/sports/userinfo/api/v2/favor/sync")
         Observable<CollectResult> syncCollect(@Query("sessionId") String sessionId,@Header("Cache-Control") String cache_control);
     }
 
-    @BaseUrl(host = AppContans.SERVER_API) // 普通新闻Host
+//    @BaseUrl(host = AppContans.SERVER_API) // 普通新闻Host
     public static interface ApiService {
         @GET("/sports/content/getdetail")
         Observable<NewsResult> getDetail(@Query("articleid") String articleid, @Header("Cache-Control") String cache_control, @Query("timestamp") String timestamp);

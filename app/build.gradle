@@ -16,7 +16,7 @@ android {
         }
         javaCompileOptions {
             annotationProcessorOptions {
-                arguments = [ moduleName : project.getName() ]
+                arguments = [moduleName: project.getName()]
             }
         }
 
@@ -47,7 +47,7 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
         debug {
-            signingConfig signingConfigs.release
+            signingConfig signingConfigs.debug
             manifestPlaceholders = [
                     GETUI_APP_ID    : "${loadParams("RELEASE_GETUI_APP_ID")}",
                     GETUI_APP_KEY   : "${loadParams("RELEASE_GETUI_APP_KEY")}",
@@ -73,7 +73,6 @@ dependencies {
     testCompile 'junit:junit:4.12'
     annotationProcessor 'com.jakewharton:butterknife-compiler:8.4.0'
 
-    annotationProcessor 'com.github.bumptech.glide:compiler:4.3.1'
 }
 
 def loadParams(String name) {

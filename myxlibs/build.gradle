@@ -1,12 +1,11 @@
 apply plugin: 'com.android.library'
 apply plugin: 'com.novoda.bintray-release'//添加
-apply plugin: 'com.jakewharton.butterknife'
 buildscript {
     repositories {
         jcenter()
     }
     dependencies {
-        classpath 'com.jakewharton:butterknife-gradle-plugin:8.5.1'
+//        classpath 'com.jakewharton:butterknife-gradle-plugin:8.4.0'
         // NOTE: Do not place your application dependencies here; they belong
         // in the individual module build.gradle files
     }
@@ -72,18 +71,13 @@ dependencies {
     compile "com.google.code.gson:gson-parent:2.6.2"
     compile "com.google.code.gson:gson:2.6.2"
 
-    compile 'com.github.bumptech.glide:glide:4.3.1'
-    annotationProcessor 'com.github.bumptech.glide:compiler:4.3.1'
+//    compile 'com.github.bumptech.glide:glide:4.3.1'
+//    annotationProcessor 'com.github.bumptech.glide:compiler:4.3.1'
 
     //view注解
+    compile 'com.jakewharton:butterknife:8.4.0'
+    annotationProcessor 'com.jakewharton:butterknife-compiler:8.4.0'
 
-
-    compile 'me.codeboy.android:align-text-view:2.3.1'
-
-    compile 'org.sufficientlysecure:html-textview:3.5'
-
-    compile 'com.jakewharton:butterknife:8.5.1'
-    annotationProcessor 'com.jakewharton:butterknife-compiler:8.5.1'
 }
 //添加
 publish {
