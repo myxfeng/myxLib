@@ -16,23 +16,23 @@ android {
         }
 
     }
-//    signingConfigs {
-//        release {
-//            storeFile file("myxlib.jks")        //正式版本的keystore
-//            storePassword "123456"
-//            keyAlias "myxlib"
-//            keyPassword "123456"
-//        }
-//        debug {
-//            storeFile file("myxlib.jks")        //正式版本的keystore
-//            storePassword "123456"
-//            keyAlias "myxlib"
-//            keyPassword "123456"
-//        }
-//    }
+    signingConfigs {
+        release {
+            storeFile file("myxlib.jks")        //正式版本的keystore
+            storePassword "123456"
+            keyAlias "myxlib"
+            keyPassword "123456"
+        }
+        debug {
+            storeFile file("myxlib.jks")        //正式版本的keystore
+            storePassword "123456"
+            keyAlias "myxlib"
+            keyPassword "123456"
+        }
+    }
     buildTypes {
         release {
-//            signingConfig signingConfigs.release
+            signingConfig signingConfigs.release
             manifestPlaceholders = [
                     GETUI_APP_ID    : "${loadParams("RELEASE_GETUI_APP_ID")}",
                     GETUI_APP_KEY   : "${loadParams("RELEASE_GETUI_APP_KEY")}",
@@ -42,7 +42,7 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
         debug {
-//            signingConfig signingConfigs.release
+            signingConfig signingConfigs.debug
             manifestPlaceholders = [
                     GETUI_APP_ID    : "${loadParams("RELEASE_GETUI_APP_ID")}",
                     GETUI_APP_KEY   : "${loadParams("RELEASE_GETUI_APP_KEY")}",
