@@ -121,4 +121,22 @@ public class MainActivity extends AppCompatActivity {
     public void closepush(View view) {
         PushManager.getInstance().stopService(MainActivity.this);
     }
+    public  void jumprecyclerview(View view){
+
+    }
+    public void threadNof(View view){
+
+    }
+    public void jumpMvp(View view){
+
+    }
+    public void jumpCycler(View view){
+
+    }
+    public void postBody(View view){
+
+    }
+    public void nativeweb(){
+
+    }
 }
