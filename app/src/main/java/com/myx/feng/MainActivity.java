@@ -52,6 +52,7 @@ public class MainActivity extends AppCompatActivity {
 //        Futils.getMetaValue();
         String aa = "id:" + Futils.getMetaValue(this, "PUSH_APPID") + "\n key:" + Futils.getMetaValue(this, "PUSH_APPKEY") + "\n secret：" + Futils.getMetaValue(this, "PUSH_APPSECRET");
         title.setText(aa);
+
     }
 
 
