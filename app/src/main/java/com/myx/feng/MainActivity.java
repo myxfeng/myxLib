@@ -5,21 +5,27 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.ShortcutManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.RequiresApi;
+import android.support.design.widget.NavigationView;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.app.NotificationCompat;
+import android.support.v7.widget.Toolbar;
+import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
+import android.view.WindowManager;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 
 import com.igexin.sdk.PushManager;
 import com.myx.feng.app.ApiServiceTest;
+import com.myx.feng.app.AppContans;
 import com.myx.feng.cycleviewdemo.CyclerViewActivity;
 import com.myx.feng.getui.DemoIntentService;
 import com.myx.feng.getui.Main2Activity;
@@ -45,8 +51,11 @@ import rx.Subscriber;
 
 public class MainActivity extends AppCompatActivity {
     Context context;
-//    @BindView(R.id.img)
+    @BindView(R.id.img)
+    ImageView image;
+    private Toolbar toolbar;
 
+    private NavigationView navigationView;
 
     @BindView(R.id.title)
     TextView title;
@@ -55,33 +64,64 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+
+        setSystemBarTransparent();
+        setContentView(R.layout.activity_drawleft);
         context = this;
         ButterKnife.bind(this);
+        toolbar = (Toolbar) findViewById(R.id.toolbar);
+        navigationView = (NavigationView) findViewById(R.id.navigationView);
+        setSupportActionBar(toolbar);
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        }
+        View vNavigationHeader = LayoutInflater.from(this).inflate(R.layout.itemview, navigationView, false);
+        navigationView.addHeaderView(vNavigationHeader);
 
-//        image= (SimpleDraweeView) findViewById(R.id.img);
-//        image.setBackgroundColor(Color.parseColor("#465568"));
+    }
 
+    private void setSystemBarTransparent() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            // LOLLIPOP解决方案
+            getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN | View.SYSTEM_UI_FLAG_LAYOUT_STABLE);
+            getWindow().addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+            getWindow().setStatusBarColor(Color.TRANSPARENT);
+        } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            // KITKAT解决方案
+            getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+        }
+    }
+    public void test(){
+    }
+
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == android.R.id.home) {
+            finish();
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     String imgkey = "121231";
     String titlekey = "fdsfsd";
 
-//    public void postImg(View view) {
-//        Api.getDefault(ApiServiceTest.ApiService.class).getDetail("2095260387443712_cms_2095260387443712", "时间").compose(RxSchedulers.<NewsResult>io_main()).subscribe(new CaheSubscribe<NewsResult>(this, imgkey, false, true) {
-//            @Override
-//            public void superNext(NewsResult newsResult) {
-//                ToastUtils.showShort(MainActivity.this, newsResult.getData().getCover() + "==" + newsResult.getResult().getSource());
-//                ImageUtils.loadBitmapOnlyWifi(newsResult.getData().getCover(), image, false, 0);
-//            }
-//
-//            @Override
-//            public void superError(Throwable e) {
-//
-//            }
-//
-//        });
-//    }
+    public void postImg(View view) {
+        Api.getDefault(ApiServiceTest.ApiService.class, AppContans.SERVER_API).getDetail("2095260387443712_cms_2095260387443712", "时间").compose(RxSchedulers.<NewsResult>io_main()).subscribe(new CaheSubscribe<NewsResult>(this, imgkey, false, true) {
+            @Override
+            public void superNext(NewsResult newsResult) {
+                ToastUtils.showShort(MainActivity.this, newsResult.getData().getCover() + "==" + newsResult.getResult().getSource());
+                ImageUtils.loadBitmapOnlyWifi(newsResult.getData().getCover(), image, false, 0);
+            }
+
+            @Override
+            public void superError(Throwable e) {
+
+            }
+
+        });
+    }
 
     //    ToastUtils.showShort(MainActivity.this, newsResult.getData().getCover());
 ////                ImageUtils.loadBitmapOnlyWifi(newsResult.getData().getCover(), image, false, 0);
@@ -91,28 +131,29 @@ public class MainActivity extends AppCompatActivity {
 //            image.setImageBitmap(BitmapFactory.decodeFile(file.getPath()));
 //        }
 //    });
-//    public void getTitle(View view) {
-//        Api.getDefault(ApiServiceTest.UserService.class).syncCollect("f145e922e7c24e9cab3e7e457ff30cd4v5HT5f9z", Api.CACHE_CONTROL_NET).compose(RxSchedulers.<CollectResult>io_main()).subscribe(new Subscriber<CollectResult>() {
-//            @Override
-//            public void onCompleted() {
-//
-//            }
-//
-//            @Override
-//            public void onError(Throwable e) {
-//                CollectResult dddd = (CollectResult) ACache.get(MainActivity.this).getAsObject(titlekey);
-//                onNext(dddd);
-//            }
-//
-//            @Override
-//            public void onNext(CollectResult newsResult) {
-//                ACache.get(MainActivity.this).put(titlekey, newsResult);
-//
+    public void getTitle(View view) {
+        Api.getDefault(ApiServiceTest.UserService.class, AppContans.SERVER__USER_API).syncCollect("f145e922e7c24e9cab3e7e457ff30cd4v5HT5f9z", Api.CACHE_CONTROL_NET).compose(RxSchedulers.<CollectResult>io_main()).subscribe(new Subscriber<CollectResult>() {
+            @Override
+            public void onCompleted() {
+
+            }
+
+            @Override
+            public void onError(Throwable e) {
+                CollectResult dddd = (CollectResult) ACache.get(MainActivity.this).getAsObject(titlekey);
+                onNext(dddd);
+            }
+
+            @Override
+            public void onNext(CollectResult newsResult) {
+                ACache.get(MainActivity.this).put(titlekey, newsResult);
+
 //                ToastUtils.showShort(MainActivity.this, newsResult.getData().get(0).getNews_title());
 //                title.setText(newsResult.getData().get(0).getNews_title());
-//            }
-//        });
-//    }
+
+            }
+        });
+    }
 
     public void openpush(View view) {
         ToastUtils.showShort(MainActivity.this, "开启");
@@ -178,24 +219,24 @@ public class MainActivity extends AppCompatActivity {
         startActivity(new Intent(this, NativeWebActivity.class));
     }
 
-//    public void postBody(View view) {
-//        NewsData data = new NewsData();
-//        data.setArticleid("2095260387443712_cms_2095260387443712");
-//        Api.getDefault(ApiServiceTest.ApiService.class).getDetail(data).compose(RxSchedulers.<NewsResult>io_main()).subscribe(new Subscriber<NewsResult>() {
-//            @Override
-//            public void onCompleted() {
-//
-//            }
-//
-//            @Override
-//            public void onError(Throwable e) {
-//
-//            }
-//
-//            @Override
-//            public void onNext(NewsResult newsResult) {
-//
-//            }
-//        });
-//    }
+    public void postBody(View view) {
+        NewsData data = new NewsData();
+        data.setArticleid("2095260387443712_cms_2095260387443712");
+        Api.getDefault(ApiServiceTest.ApiService.class, AppContans.SERVER_API).getDetail(data).compose(RxSchedulers.<NewsResult>io_main()).subscribe(new Subscriber<NewsResult>() {
+            @Override
+            public void onCompleted() {
+
+            }
+
+            @Override
+            public void onError(Throwable e) {
+
+            }
+
+            @Override
+            public void onNext(NewsResult newsResult) {
+
+            }
+        });
+    }
 }

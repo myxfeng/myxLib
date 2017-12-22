@@ -1,4 +1,10 @@
 <resources>
     <string name="app_name">MyxLib</string>
     <string name="title_activity_recycler">RecyclerActivity</string>
+    <string name="menu_setting">功能设置</string>
+    <string name="menu_share">推荐给朋友</string>
+    <string name="menu_about">关于波尼音乐</string>
+    <string name="menu_night">夜间模式</string>
+    <string name="menu_timer">定时停止播放</string>
+    <string name="menu_exit">退出应用</string>
 </resources>

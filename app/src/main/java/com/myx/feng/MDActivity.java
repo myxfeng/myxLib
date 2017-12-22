@@ -1,13 +1,11 @@
 package com.myx.feng;
 
-import android.content.Intent;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.NavigationView;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
-import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.TextView;
 
@@ -36,13 +34,7 @@ public class MDActivity extends AppCompatActivity {
         StatusBarCompat.setStatusBarColor(this,this.getResources().getColor(R.color.colorPrimary));
         setContentView(R.layout.activity_md);
         ButterKnife.bind(this);
-//        setSupportActionBar(toolbar);
-//        getSupportActionBar().setDisplayShowTitleEnabled(false);
-//        toolbarTitle.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                startActivity(new Intent(MDActivity.this,MainActivity.class));
-//            }
-//        });
+
+
     }
 }

@@ -1,16 +1,32 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:paddingBottom="@dimen/activity_vertical_margin"
-    android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingTop="@dimen/activity_vertical_margin">
+    android:layout_height="match_parent">
+
+    <android.support.design.widget.AppBarLayout
+        android:id="@+id/appbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
+
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="?attr/colorPrimary"
+            app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
+    </android.support.design.widget.AppBarLayout>
 
     <RelativeLayout
         android:id="@+id/activity_main"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:layout_below="@+id/appbar"
+        android:paddingBottom="@dimen/activity_vertical_margin"
+        android:paddingLeft="@dimen/activity_horizontal_margin"
+        android:paddingRight="@dimen/activity_horizontal_margin"
+        android:paddingTop="@dimen/activity_vertical_margin">
 
         <Button
             android:id="@+id/button4"
@@ -102,41 +118,41 @@
             android:id="@+id/button8"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:onClick="jumpMvp"
-            android:text="跳转MvpActivity"
-            android:layout_below="@+id/title"
             android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true" />
+            android:layout_alignParentStart="true"
+            android:layout_below="@+id/title"
+            android:onClick="jumpMvp"
+            android:text="跳转MvpActivity" />
 
         <Button
-            android:text="跳转轮播图"
+            android:id="@+id/button10"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/button5"
             android:layout_alignParentLeft="true"
+            android:layout_below="@+id/button5"
             android:onClick="jumpCycler"
-            android:id="@+id/button10" />
+            android:text="跳转轮播图" />
 
         <Button
-            android:text="PostBody"
+            android:id="@+id/button9"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_above="@+id/button8"
-            android:id="@+id/button9"
-            android:layout_alignRight="@+id/button6"
             android:layout_alignEnd="@+id/button6"
-            android:onClick="postBody"
             android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true" />
+            android:layout_alignParentStart="true"
+            android:layout_alignRight="@+id/button6"
+            android:onClick="postBody"
+            android:text="PostBody" />
 
         <Button
-            android:text="nativeweb"
+            android:id="@+id/button11"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_alignEnd="@+id/button"
             android:layout_alignParentBottom="true"
             android:layout_alignRight="@+id/button"
-            android:layout_alignEnd="@+id/button"
             android:onClick="nativeweb"
-            android:id="@+id/button11" />
+            android:text="nativeweb" />
     </RelativeLayout>
-</ScrollView>
+</RelativeLayout>

@@ -3,6 +3,7 @@ package com.myx.feng.app;
 import android.app.Activity;
 import android.app.Application;
 import android.os.Bundle;
+import android.os.Debug;
 import android.util.Log;
 
 import com.myx.library.image.ImageUtils;
@@ -18,8 +19,10 @@ public class App extends Application   implements Application.ActivityLifecycleC
     @Override
     public void onCreate() {
         super.onCreate();
+        Debug.startMethodTracing("appstart");
         Api.init(this);
         ImageUtils.initialize(this);
+        Debug.stopMethodTracing();
     }
 
     @Override
