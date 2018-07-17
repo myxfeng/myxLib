@@ -2,10 +2,12 @@ package com.myx.feng.recyclerviewdemo;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,6 +15,9 @@ import android.view.ViewGroup;
 import com.myx.feng.R;
 import com.myx.feng.recyclerviewdemo.dummy.DummyContent;
 import com.myx.feng.recyclerviewdemo.dummy.DummyContent.DummyItem;
+import com.myx.library.recyclerview.MRefreshRecyclerView;
+import com.myx.library.recyclerview.MReyclerview;
+import com.myx.library.util.ToastUtils;
 
 import java.util.List;
 
@@ -62,15 +67,67 @@ public class ItemFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_item_list, container, false);
 
         // Set the adapter
-        if (view instanceof RecyclerView) {
+        if (view instanceof MRefreshRecyclerView) {
             Context context = view.getContext();
-            RecyclerView recyclerView = (RecyclerView) view;
+            final MRefreshRecyclerView recyclerView = (MRefreshRecyclerView) view;
+
+            final MyItemRecyclerViewAdapter adapter=new MyItemRecyclerViewAdapter(DummyContent.ITEMS, mListener, getActivity());
+            final MReyclerview mmm= (MReyclerview) recyclerView.getRecyclerView();
             if (mColumnCount <= 1) {
-                recyclerView.setLayoutManager(new LinearLayoutManager(context));
+                mmm.setLayoutManager(new LinearLayoutManager(context));
             } else {
-                recyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
+                mmm.setLayoutManager(new GridLayoutManager(context, mColumnCount));
             }
-            recyclerView.setAdapter(new MyItemRecyclerViewAdapter(DummyContent.ITEMS, mListener, getActivity()));
+            recyclerView.setLoadMoreEnabled(true);
+            recyclerView.setPullRefreshEnabled(true);
+            recyclerView.setOnPullRefreshListener(new MRefreshRecyclerView.OnPullRefreshListener() {
+                @Override
+                public void onPullRefresh() {
+                    Log.i("rrrr","aaaa");
+
+                    new Handler().postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            ToastUtils.showLong(getActivity(),"refresh success");
+                            recyclerView.pullRefreshComplete();
+                        }
+                    },2000);
+                }
+            });
+            recyclerView.setOnLoadMoreListener(new MRefreshRecyclerView.OnLoadMoreListener() {
+                @Override
+                public void onLoadMore() {
+                    Log.i("rrrr","ccccc");
+                    new Handler().postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            recyclerView.loadMoreComplete();
+                            ToastUtils.showLong(getActivity(),"loadmore success");
+                            DummyItem test=new DummyItem("testid","testcontent","testddddd");
+                            adapter.getmValues().add(test);
+                            adapter.notifyDataSetChanged();
+                        }
+                    },2000);
+
+                }
+            });
+//            mmm.setEmptyView();
+            recyclerView.setAdapter(adapter);
+
+            mmm.addOnScrollListener(new RecyclerView.OnScrollListener() {
+                @Override
+                public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+                    super.onScrollStateChanged(recyclerView, newState);
+                }
+
+                @Override
+                public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                    super.onScrolled(recyclerView, dx, dy);
+                    LinearLayoutManager layoutManager= (LinearLayoutManager) mmm.getLayoutManager();
+
+                    Log.i("rrrr","ffffffc="+layoutManager.findLastVisibleItemPosition());
+                }
+            });
         }
         return view;
     }

@@ -12,7 +12,8 @@ android {
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         ndk {
-            abiFilters "armeabi", "armeabi-v7a", "x86_64", "x86"
+            abiFilters "armeabi", "armeabi-v7a", "mips", "x86"
+            moduleName "Jnilib"
         }
 
     }
@@ -62,18 +63,20 @@ dependencies {
     compile "com.android.support:appcompat-v7:${project.supportLib}"
     compile "com.android.support:design:${project.supportLib}"
     compile project(':myxlibs')
-    compile 'com.jakewharton:butterknife:8.4.0'
-    compile 'com.getui:sdk:2.10.2.0'
     compile "com.android.support:support-v4:${project.supportLib}"
     compile "com.android.support:recyclerview-v7:${project.supportLib}"
-    testCompile 'junit:junit:4.12'
-    annotationProcessor 'com.jakewharton:butterknife-compiler:8.4.0'
+    //    compile files('libs/pdrecyclerview-0.0.3-20170912.022753-9-sources.jar')
+
+    compile 'com.jakewharton:butterknife:8.4.0'
+    compile 'com.getui:sdk:2.10.2.0'
     compile 'com.people.library:onkeyshare:0.0.1'
     compile 'com.people.library:pdrecyclerview:0.0.3-SNAPSHOT'
-//    compile files('libs/pdrecyclerview-0.0.3-20170912.022753-9-sources.jar')
-
+    compile 'com.android.support.constraint:constraint-layout:1.0.2'
+    testCompile 'junit:junit:4.12'
+    annotationProcessor 'com.jakewharton:butterknife-compiler:8.4.0'
     annotationProcessor 'com.github.bumptech.glide:compiler:4.3.1'
 }
+
 
 def loadParams(String name) {
     return hasProperty(name) ? getProperty(name) : ""

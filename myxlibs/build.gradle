@@ -31,6 +31,8 @@ dependencies {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
     compile "com.android.support:appcompat-v7:${project.supportLib}"
+    compile "com.android.support:recyclerview-v7:${project.supportLib}"
+
     compile group: 'org.bouncycastle', name: 'bcprov-jdk16', version: '1.45'
 
 
@@ -49,6 +51,8 @@ dependencies {
     //rxjava
     compile 'io.reactivex:rxandroid:1.2.1'
     compile 'io.reactivex:rxjava:1.1.6'
+
+
 
     //网络层框架
     compile 'com.squareup.retrofit2:retrofit:2.1.0'
@@ -71,6 +75,8 @@ dependencies {
     compile 'me.codeboy.android:align-text-view:2.3.1'
 
     compile 'org.sufficientlysecure:html-textview:3.5'
+
+    compile "com.jakewharton:disklrucache:2.0.2"
 
 }
 //添加

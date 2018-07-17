@@ -57,7 +57,8 @@ public class CustomCycler extends CycleViewPager {
         View view = LayoutInflater.from(context).inflate(R.layout.itemview, null);
         ImageView imageView = (ImageView) view.findViewById(R.id.image);
         NewsData data = (NewsData) info;
-        ImageUtils.loadBitmapOnlyWifi(data.getCover(), imageView, false, 0);
+        ImageUtils.loadImageOnlyWifi(data.getCover(), imageView, false, 0);
         return view;
     }
+
 }

@@ -8,6 +8,7 @@ import android.util.Log;
 
 import com.myx.library.image.ImageUtils;
 import com.myx.library.rxjava.Api;
+import com.myx.library.util.LogUtils;
 
 
 //import com.myx.library.image.ImageUtils;
@@ -23,6 +24,7 @@ public class App extends Application   implements Application.ActivityLifecycleC
         Api.init(this);
         ImageUtils.initialize(this);
         Debug.stopMethodTracing();
+        LogUtils.init(true,"myx");
     }
 
     @Override

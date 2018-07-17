@@ -21,5 +21,9 @@
             android:id="@+id/action_about"
             android:icon="@mipmap/ic_launcher"
             android:title="@string/menu_about" />
+        <item
+            android:id="@+id/bluetooth"
+            android:icon="@mipmap/ic_launcher"
+            android:title="@string/menu_bluetooth" />
     </group>
 </menu>

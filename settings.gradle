@@ -1,1 +1,1 @@
-include ':app', ':myxlibs'
+include ':app', ':myxlibs', ':rxcache'

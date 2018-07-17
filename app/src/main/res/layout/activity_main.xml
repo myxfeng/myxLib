@@ -27,132 +27,21 @@
         android:paddingLeft="@dimen/activity_horizontal_margin"
         android:paddingRight="@dimen/activity_horizontal_margin"
         android:paddingTop="@dimen/activity_vertical_margin">
-
-        <Button
-            android:id="@+id/button4"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignEnd="@+id/button3"
-            android:layout_alignRight="@+id/button3"
-            android:layout_below="@+id/button3"
-            android:layout_marginTop="14dp"
-            android:onClick="jumprecyclerview"
-            android:text="跳转reccylerview" />
-
-        <Button
-            android:id="@+id/button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentTop="true"
-            android:onClick="postImg"
-            android:text="获取数据 加载图片 postform表单" />
-
-        <com.facebook.drawee.view.SimpleDraweeView
+        <ListView
+            android:id="@+id/lisview"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"></ListView>
+        <ImageView
             android:id="@+id/img"
             android:layout_width="100dp"
-            android:layout_height="100dp"
-            android:layout_alignParentEnd="true"
             android:layout_alignParentRight="true"
-            android:layout_alignParentTop="true"
-            android:background="@mipmap/ic_launcher" />
-
-        <Button
-            android:id="@+id/button2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignBottom="@+id/img"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true"
-            android:onClick="getTitle"
-            android:text="获取收藏的文章名字" />
-
+            android:layout_height="100dp" />
         <TextView
             android:id="@+id/title"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentEnd="true"
+            android:layout_width="100dp"
             android:layout_alignParentRight="true"
             android:layout_below="@+id/img"
-            android:layout_marginTop="26dp"
-            android:text="TextView" />
+            android:layout_height="wrap_content" />
+    </RelativeLayout>>
 
-        <Button
-            android:id="@+id/button3"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignEnd="@+id/button8"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true"
-            android:layout_alignRight="@+id/button8"
-            android:layout_below="@+id/button8"
-            android:onClick="threadNof"
-            android:text="threadNof" />
-
-        <Button
-            android:id="@+id/button5"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true"
-            android:layout_below="@+id/button4"
-            android:layout_marginTop="14dp"
-            android:onClick="openpush"
-            android:text="开起推送" />
-
-        <Button
-            android:id="@+id/button6"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignBaseline="@+id/button5"
-            android:layout_alignBottom="@+id/button5"
-            android:layout_marginLeft="24dp"
-            android:layout_marginStart="24dp"
-            android:layout_toEndOf="@+id/button5"
-            android:layout_toRightOf="@+id/button5"
-            android:onClick="closepush"
-            android:text="关闭推送" />
-
-        <Button
-            android:id="@+id/button8"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true"
-            android:layout_below="@+id/title"
-            android:onClick="jumpMvp"
-            android:text="跳转MvpActivity" />
-
-        <Button
-            android:id="@+id/button10"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:layout_below="@+id/button5"
-            android:onClick="jumpCycler"
-            android:text="跳转轮播图" />
-
-        <Button
-            android:id="@+id/button9"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_above="@+id/button8"
-            android:layout_alignEnd="@+id/button6"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true"
-            android:layout_alignRight="@+id/button6"
-            android:onClick="postBody"
-            android:text="PostBody" />
-
-        <Button
-            android:id="@+id/button11"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignEnd="@+id/button"
-            android:layout_alignParentBottom="true"
-            android:layout_alignRight="@+id/button"
-            android:onClick="nativeweb"
-            android:text="nativeweb" />
-    </RelativeLayout>
 </RelativeLayout>

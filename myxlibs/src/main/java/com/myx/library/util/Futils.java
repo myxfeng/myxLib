@@ -6,6 +6,7 @@ import android.content.pm.ActivityInfo;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.content.res.Configuration;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.wifi.WifiInfo;
@@ -593,5 +594,16 @@ public class Futils {
         }
         return null;
     }
+
+    public static boolean isLand(Context context) {
+        if (context.getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
+            //竖屏
+            return false;
+        } else {
+            //横屏
+            return true;
+        }
+    }
+
 }
 

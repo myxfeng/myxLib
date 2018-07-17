@@ -7,4 +7,8 @@
     <string name="menu_night">夜间模式</string>
     <string name="menu_timer">定时停止播放</string>
     <string name="menu_exit">退出应用</string>
+
+    <string name="menu_bluetooth">蓝牙</string>
+    <string name="title_activity_main4">Main4Activity</string>
+    <string name="title_activity_test">Test</string>
 </resources>

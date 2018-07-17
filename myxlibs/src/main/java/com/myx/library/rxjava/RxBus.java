@@ -13,7 +13,7 @@ import rx.subjects.Subject;
 /**
  * 用RxJava实现的EventBus
  * <p>
- * Created by Frank on 2016/11/23.
+ * Created by mayuxin on 2016/11/23.
  */
 
 public class RxBus {

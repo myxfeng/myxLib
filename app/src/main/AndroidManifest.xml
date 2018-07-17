@@ -27,7 +27,9 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".MainActivity">
+        <activity
+            android:name=".MainActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -63,8 +65,14 @@
             android:label="@string/title_activity_recycler"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity android:name=".mvpdemo.MvpActivity" />
-        <activity android:name=".cycleviewdemo.CyclerViewActivity"></activity>
+        <activity android:name=".cycleviewdemo.CyclerViewActivity" />
         <activity android:name=".nativeweb.NativeWebActivity" />
+        <activity
+            android:name=".Main4Activity"
+            android:label="@string/title_activity_main4"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity android:name=".bluetooth.BluetoothActivity" />
+        <activity android:name=".FrescoTestActivity" />
     </application>
 
 </manifest>

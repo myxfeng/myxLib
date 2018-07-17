@@ -31,14 +31,14 @@ public class HttpUtil {
      * @param map
      * @return String
      */
-    public static String setUrlParameter(String url, Map<String, String> map) {
+    public static String setUrlParameter(String url, Map<String, Object> map) {
         if (!CheckUtils.isEmptyStr(url)) {
             if (map != null && map.size() > 0) {
                 Set<String> set = map.keySet();
                 Iterator<String> iterator = set.iterator();
                 while (iterator.hasNext()) {
                     String key = iterator.next();
-                    String value = map.get(key);
+                    String value = map.get(key).toString();
                     url = setUrlParameter(url, key, value);
                 }
             }
@@ -79,10 +79,10 @@ public class HttpUtil {
         return str;
     }
 
-    public static RequestBody hasMapToBody(HashMap<String, String> hashmap) {
+    public static RequestBody hasMapToBody(HashMap<String, Object> hashmap) {
         FormBody.Builder builder = new FormBody.Builder();
         if (hashmap != null) {
-            Iterator<Map.Entry<String, String>> iterator = hashmap.entrySet().iterator();
+            Iterator<Map.Entry<String, Object>> iterator = hashmap.entrySet().iterator();
             while (iterator.hasNext()) {
                 Map.Entry entry = iterator.next();
                 builder.add(entry.getKey().toString(), entry.getValue().toString());

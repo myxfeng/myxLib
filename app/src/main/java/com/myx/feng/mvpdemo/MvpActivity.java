@@ -31,7 +31,7 @@ public class MvpActivity extends BaseActivity<MvpPrestensrImpl, MvpMoudleImpl> i
 
     @Override
     public void onGetImageSuccess(String imageUrl) {
-        ImageUtils.loadBitmapOnlyWifi(imageUrl, imageView, false, 0);
+        ImageUtils.loadImageOnlyWifi(imageUrl, imageView, false, 0);
     }
 
     @Override

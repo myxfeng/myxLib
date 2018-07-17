@@ -10,7 +10,7 @@ import rx.Subscriber;
 /**
  * 对Subscriber的简单封装，在网络请求过程中实现加载时，请求成功时，请求失败时的简单处理
  *
- * Created by Frank on 2016/12/12.
+ * Created by mayuxin on 2016/12/12.
  */
 
 public abstract class RxSubscriber<T> extends Subscriber<T> {

@@ -23,7 +23,7 @@ import rx.schedulers.Schedulers;
  *
  * 另外， Android 还有一个专用的 AndroidSchedulers.mainThread()，它指定的操作将在 Android 主线程运行。
  *
- * Created by Frank on 2016/11/29.
+ * Created by mayuxin on 2016/11/29.
  */
 
 public class RxSchedulers {
@@ -37,4 +37,5 @@ public class RxSchedulers {
             }
         };
     }
+
 }
