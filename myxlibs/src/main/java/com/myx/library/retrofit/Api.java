@@ -1,4 +1,4 @@
-package com.myx.library.rxjava;
+package com.myx.library.retrofit;
 
 import android.app.Application;
 import android.support.annotation.NonNull;
@@ -6,6 +6,7 @@ import android.text.TextUtils;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.myx.library.rxjava.UserAgentInterceptor;
 import com.myx.library.util.Futils;
 import com.myx.library.util.UseAgentUtils;
 
@@ -30,7 +31,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
     Api.init();
 
     接口编写实例
-    import com.myx.library.rxjava.BaseUrl;
+    import com.myx.library.retrofit.BaseUrl;
 
     import retrofit2.http.GET;
     import retrofit2.http.Query;

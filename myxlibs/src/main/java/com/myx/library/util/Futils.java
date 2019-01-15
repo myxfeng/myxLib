@@ -17,7 +17,7 @@ import android.util.DisplayMetrics;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 
-import com.myx.library.rxjava.BaseUrl;
+import com.myx.library.retrofit.BaseUrl;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;

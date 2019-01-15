@@ -13,8 +13,9 @@ android {
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         ndk {
             abiFilters "armeabi", "armeabi-v7a", "mips", "x86"
-            moduleName "Jnilib"
         }
+
+        multiDexEnabled true
 
     }
     signingConfigs {
@@ -62,7 +63,8 @@ dependencies {
     })
     compile "com.android.support:appcompat-v7:${project.supportLib}"
     compile "com.android.support:design:${project.supportLib}"
-    compile project(':myxlibs')
+//    compile project(':myxlibs')
+    compile "com.myx.library:lib:1.0.3"
     compile "com.android.support:support-v4:${project.supportLib}"
     compile "com.android.support:recyclerview-v7:${project.supportLib}"
     //    compile files('libs/pdrecyclerview-0.0.3-20170912.022753-9-sources.jar')

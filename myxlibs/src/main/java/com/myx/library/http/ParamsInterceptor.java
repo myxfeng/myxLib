@@ -25,12 +25,12 @@ public abstract class ParamsInterceptor implements Interceptor {
         HttpUrl.Builder urlBuilder = original.url().newBuilder();
         RequestBody requestBody = original.body();
         if ("GET".equals(original.method())) {//GET请求的参数是挂在url 上
-            HashMap<String, String> params = getParams();
+            HashMap<String, Object> params = getParams();
             if (params != null && params.size() > 0) {
-                Iterator<Map.Entry<String, String>> iterator = params.entrySet().iterator();
+                Iterator<Map.Entry<String, Object>> iterator = params.entrySet().iterator();
                 while (iterator.hasNext()) {
-                    Map.Entry<String, String> entry = iterator.next();
-                    urlBuilder.addQueryParameter(entry.getKey(), entry.getValue());
+                    Map.Entry<String, Object> entry = iterator.next();
+                    urlBuilder.addQueryParameter(entry.getKey(), entry.getValue().toString());
                 }
             }
         } else if ("POST".equals(original.method())) {// POST 请求的参数是放在Form表单body 体中
@@ -58,12 +58,12 @@ public abstract class ParamsInterceptor implements Interceptor {
                 multiBuilder.addPart(HttpUtil.hasMapToBody(getParams()));
                 requestBody=multiBuilder.build();
             }else {
-                HashMap<String, String> params = getParams();
+                HashMap<String, Object> params = getParams();
                 if (params != null && params.size() > 0) {
-                    Iterator<Map.Entry<String, String>> iterator = params.entrySet().iterator();
+                    Iterator<Map.Entry<String, Object>> iterator = params.entrySet().iterator();
                     while (iterator.hasNext()) {
-                        Map.Entry<String, String> entry = iterator.next();
-                        urlBuilder.addQueryParameter(entry.getKey(), entry.getValue());
+                        Map.Entry<String, Object> entry = iterator.next();
+                        urlBuilder.addQueryParameter(entry.getKey(), entry.getValue().toString());
                     }
                 }
             }
@@ -81,6 +81,6 @@ public abstract class ParamsInterceptor implements Interceptor {
         return chain.proceed(request);
     }
 
-    public abstract HashMap<String, String> getParams();
+    public abstract HashMap<String, Object> getParams();
 
 }

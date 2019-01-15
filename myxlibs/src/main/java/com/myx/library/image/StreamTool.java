@@ -15,6 +15,7 @@ import java.io.InputStream;
 public class StreamTool {
     /**
      * 拷贝图片文件
+     *
      * @param oldPath 原图片所在路径
      * @param newPath 新图片所在路径
      * @throws IOException
@@ -34,8 +35,9 @@ public class StreamTool {
 
     /**
      * 将byte[]写入指定的文件
+     *
      * @param filePath 指定文件的路径
-     * @param data byte[]
+     * @param data     byte[]
      * @throws IOException
      */
     public static void write(String filePath, byte[] data) throws IOException {
@@ -47,6 +49,7 @@ public class StreamTool {
 
     /**
      * 根据文件路径获取byte[]
+     *
      * @param path 文件路径
      * @return
      * @throws IOException
@@ -59,25 +62,25 @@ public class StreamTool {
      * 从输入流读取数据
      *
      * @param inStream
-     * @return  byte[]
+     * @return byte[]
      * @throws IOException
-     * @throws Exception
      */
     public static byte[] read(InputStream inStream) throws IOException {
-        ByteArrayOutputStream outSteam = new ByteArrayOutputStream();
-        byte[] buffer = new byte[1024];
-        int len;
-        while ((len = inStream.read(buffer)) != -1) {
-            outSteam.write(buffer, 0, len);
-        }
-        outSteam.flush();
-        outSteam.close();
-        inStream.close();
-        return outSteam.toByteArray();
+            ByteArrayOutputStream outSteam = new ByteArrayOutputStream();
+            byte[] buffer = new byte[1024];
+            int len;
+            while ((len = inStream.read(buffer)) != -1) {
+                outSteam.write(buffer, 0, len);
+            }
+            outSteam.flush();
+            outSteam.close();
+            inStream.close();
+            return outSteam.toByteArray();
     }
 
     /**
      * 将Bitmap对象转换成byte[]
+     *
      * @param bitmap Bitmap
      * @return byte[]
      * @throws IOException

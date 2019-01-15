@@ -26,41 +26,22 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
-
 import com.igexin.sdk.PushManager;
-import com.myx.feng.app.ApiServiceTest;
-import com.myx.feng.app.AppContans;
 import com.myx.feng.cycleviewdemo.CyclerViewActivity;
 import com.myx.feng.getui.DemoIntentService;
 import com.myx.feng.getui.Main2Activity;
-import com.myx.feng.mvpdemo.MvpActivity;
 import com.myx.feng.nativeweb.NativeWebActivity;
 import com.myx.feng.recyclerviewdemo.RecyclerActivity;
-import com.myx.feng.rxjavademo.CaheSubscribe;
-import com.myx.feng.rxjavademo.CollectResult;
 import com.myx.feng.rxjavademo.NewsData;
-import com.myx.feng.rxjavademo.NewsResult;
-import com.myx.library.http.OkHttpManager;
-import com.myx.library.http.OnHttpListener;
-import com.myx.library.image.ImageUtils;
-import com.myx.library.rxjava.Api;
-import com.myx.library.rxjava.RxSchedulers;
-import com.myx.library.util.ACache;
-import com.myx.library.util.LogUtils;
 import com.myx.library.util.ToastUtils;
-
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.IOException;
 import java.util.Random;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import okhttp3.Call;
-import okhttp3.Response;
-import rx.Subscriber;
 
 public class MainActivity extends AppCompatActivity {
     Context context;
@@ -220,19 +201,7 @@ public class MainActivity extends AppCompatActivity {
     String titlekey = "fdsfsd";
 
     public void postImg(View view) {
-        Api.getDefault(ApiServiceTest.ApiService.class, AppContans.SERVER_API).getDetail("2095260387443712_cms_2095260387443712", "时间").compose(RxSchedulers.<NewsResult>io_main()).subscribe(new CaheSubscribe<NewsResult>(this, imgkey, false, true) {
-            @Override
-            public void superNext(NewsResult newsResult) {
-                ToastUtils.showShort(MainActivity.this, newsResult.getData().getCover() + "==" + newsResult.getResult().getSource());
-                ImageUtils.loadImageOnlyWifi(newsResult.getData().getCover(), image, false, 0);
-            }
 
-            @Override
-            public void superError(Throwable e) {
-
-            }
-
-        });
     }
 
     //    ToastUtils.showShort(MainActivity.this, newsResult.getData().getCover());
@@ -244,27 +213,27 @@ public class MainActivity extends AppCompatActivity {
 //        }
 //    });
     public void getTitle(View view) {
-        Api.getDefault(ApiServiceTest.UserService.class, AppContans.SERVER__USER_API).syncCollect("f145e922e7c24e9cab3e7e457ff30cd4v5HT5f9z", Api.CACHE_CONTROL_NET).compose(RxSchedulers.<CollectResult>io_main()).subscribe(new Subscriber<CollectResult>() {
-            @Override
-            public void onCompleted() {
-
-            }
-
-            @Override
-            public void onError(Throwable e) {
-                CollectResult dddd = (CollectResult) ACache.get(MainActivity.this).getAsObject(titlekey);
-                onNext(dddd);
-            }
-
-            @Override
-            public void onNext(CollectResult newsResult) {
-                ACache.get(MainActivity.this).put(titlekey, newsResult);
-
-//                ToastUtils.showShort(MainActivity.this, newsResult.getData().get(0).getNews_title());
-//                title.setText(newsResult.getData().get(0).getNews_title());
-
-            }
-        });
+//        Api.getDefault(ApiServiceTest.UserService.class, AppContans.SERVER__USER_API).syncCollect("f145e922e7c24e9cab3e7e457ff30cd4v5HT5f9z", Api.CACHE_CONTROL_NET).compose(RxSchedulers.<CollectResult>io_main()).subscribe(new Subscriber<CollectResult>() {
+//            @Override
+//            public void onCompleted() {
+//
+//            }
+//
+//            @Override
+//            public void onError(Throwable e) {
+//                CollectResult dddd = (CollectResult) ACache.get(MainActivity.this).getAsObject(titlekey);
+//                onNext(dddd);
+//            }
+//
+//            @Override
+//            public void onNext(CollectResult newsResult) {
+//                ACache.get(MainActivity.this).put(titlekey, newsResult);
+//
+////                ToastUtils.showShort(MainActivity.this, newsResult.getData().get(0).getNews_title());
+////                title.setText(newsResult.getData().get(0).getNews_title());
+//
+//            }
+//        });
     }
 
     public void openpush(View view) {
@@ -320,7 +289,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void jumpMvp(View view) {
-        startActivity(new Intent(this, MvpActivity.class));
     }
 
     public void jumpCycler(View view) {
@@ -334,38 +302,10 @@ public class MainActivity extends AppCompatActivity {
     public void postBody(View view) {
         NewsData data = new NewsData();
         data.setArticleid("2095260387443712_cms_2095260387443712");
-        Api.getDefault(ApiServiceTest.ApiService.class, AppContans.SERVER_API).getDetail(data).compose(RxSchedulers.<NewsResult>io_main()).subscribe(new Subscriber<NewsResult>() {
-            @Override
-            public void onCompleted() {
-
-            }
-
-            @Override
-            public void onError(Throwable e) {
-
-            }
-
-            @Override
-            public void onNext(NewsResult newsResult) {
-
-            }
-        });
     }
 
     public void okhttpget(View view) {
-        String aa = "";
 
-        OkHttpManager.getInstance().getAsyn("https://api.map.baidu.com/telematics/v3/weather?output=json&ak=P97cnGElktHVEs0R4bBQV7vHYlnXX658&location=116.44355,39.9219", new OnHttpListener() {
-            @Override
-            public void onFailure(Call call, IOException e) {
-
-            }
-
-            @Override
-            public void onSuccess(Call call, Response response, String json) throws IOException {
-                LogUtils.i("json=" + json);
-            }
-        });
     }
 
     public void jsontest() {

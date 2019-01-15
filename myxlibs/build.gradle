@@ -52,7 +52,8 @@ dependencies {
     compile 'io.reactivex:rxandroid:1.2.1'
     compile 'io.reactivex:rxjava:1.1.6'
 
-
+    compile 'io.reactivex.rxjava2:rxjava:2.1.12'
+    compile 'io.reactivex.rxjava2:rxandroid:2.0.2'
 
     //网络层框架
     compile 'com.squareup.retrofit2:retrofit:2.1.0'
@@ -64,6 +65,7 @@ dependencies {
     // 解析
     compile "com.google.code.gson:gson-parent:2.6.2"
     compile "com.google.code.gson:gson:2.6.2"
+    compile "com.android.support:multidex:1.0.1"
 
     compile 'com.github.bumptech.glide:glide:4.3.1'
     annotationProcessor 'com.github.bumptech.glide:compiler:4.3.1'

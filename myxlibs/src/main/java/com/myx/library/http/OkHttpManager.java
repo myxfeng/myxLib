@@ -11,7 +11,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.concurrent.TimeUnit;
 
-
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.TrustManagerFactory;
 
@@ -30,56 +29,102 @@ import okhttp3.Response;
 
 public class OkHttpManager {
     private OkHttpClient mOkHttpClient;
-    private static volatile OkHttpManager okhttpmanager;
 
     private OkHttpManager() {
+        if (mOkHttpClient == null) {
             mOkHttpClient = new OkHttpClient.Builder()
                     .connectTimeout(10000, TimeUnit.MILLISECONDS)
-                    .readTimeout(10000,TimeUnit.MILLISECONDS)
+                    .readTimeout(10000, TimeUnit.MILLISECONDS)
                     .hostnameVerifier(SSLSocketClient.getHostnameVerifier())
                     .sslSocketFactory(SSLSocketClient.getSSLSocketFactory())
                     .build();
-
+        }
     }
 
     private OkHttpManager(OkHttpClient client) {
         this.mOkHttpClient = client;
     }
 
-    public OkHttpClient getClient() {
-        return mOkHttpClient;
+    public static OkHttpManager build() {
+        return new OkHttpManager();
     }
 
-    public void setClient(OkHttpClient client) {
-        this.mOkHttpClient = client;
+    public static OkHttpManager build(OkHttpClient client) {
+        return new OkHttpManager(client);
+
     }
 
-    /**
-     * 单例
-     *
-     * @return
-     */
-    public static OkHttpManager getInstance() {
-        if (okhttpmanager == null) {
-            synchronized (OkHttpManager.class) {
-                if(okhttpmanager==null){
-                    okhttpmanager = new OkHttpManager();
-                }
-            }
+    private String url;
+    private HashMap<String, Object> params;
+    private String method;
+    private boolean isAsyn = true;
+    private OnHttpListener listener;
+    private ArrayList<File> files;
+    private String fileKey;
+    private String filePath;
+
+    public OkHttpManager post() {
+        method = "POST";
+        return this;
+    }
+
+    public OkHttpManager get() {
+        method = "GET";
+        return this;
+    }
+
+    public OkHttpManager upload() {
+        method = "UPLOAD";
+        return this;
+    }
+
+    public OkHttpManager download() {
+        method = "DOWNLOAD";
+        return this;
+    }
+
+    public OkHttpManager url(String url) {
+        this.url = url;
+        return this;
+    }
+
+    public OkHttpManager params(HashMap<String, Object> params) {
+        this.params = params;
+        return this;
+    }
+
+    public OkHttpManager addFile(ArrayList<File> files) {
+        this.files = files;
+        return this;
+    }
+
+    public OkHttpManager filePath(String filePath) {
+        this.filePath = filePath;
+        return this;
+    }
+
+    public OkHttpManager fileKey(String fileKey) {
+        this.fileKey = fileKey;
+        return this;
+    }
+
+    public OkHttpManager asyn(boolean isAsyn) {
+        this.isAsyn = isAsyn;
+        return this;
+    }
+
+    public void excute(OnHttpListener listener) {
+        this.listener = listener;
+        if ("UPLOAD".equals(method)) {
+            postAsynFile(url, params, fileKey, files, listener);
+        } else if ("DOWNLOAD".equals(method)) {
+            downAsynFile(url, filePath, listener);
+        } else {
+            request(url, params, method, isAsyn, listener);
+
         }
-        return okhttpmanager;
-    }
 
-    /**
-     * 非单例
-     *
-     * @return
-     */
-    public static OkHttpManager initOKHttp(OkHttpClient client) {
-        okhttpmanager = new OkHttpManager(client);
-        return okhttpmanager;
     }
-
 
     /**
      * @param url
@@ -90,7 +135,7 @@ public class OkHttpManager {
      * @return
      * @throws IOException
      */
-    private String request(String url, HashMap<String, Object> hashmap, String method, boolean isAsyn, final OnHttpListener listener) {
+    private String request(String url, HashMap<String, Object > hashmap, String method, boolean isAsyn, final OnHttpListener listener) {
         RequestBody requestbody = null;
         if ("GET".equals(method)) {
             url = HttpUtil.setUrlParameter(url, hashmap);
@@ -127,80 +172,14 @@ public class OkHttpManager {
         return "";
     }
 
-    /**
-     * @param url
-     * @param hashMap
-     * @param listener
-     */
-    public void getAsyn(String url, HashMap<String, Object> hashMap, final OnHttpListener listener) {
-        request(url, hashMap, "GET", true, listener);
-    }
-
-    /**
-     * @param url
-     * @param listener
-     */
-    public void getAsyn(String url, final OnHttpListener listener) {
-        request(url, null, "GET", true, listener);
-    }
-
-    /**
-     * @param url
-     * @param hashMap
-     * @return
-     */
-    public String get(String url, HashMap<String, Object> hashMap) {
-        return request(url, hashMap, "GET", false, null);
-    }
-
-    /**
-     * @param url
-     * @return
-     */
-    public String get(String url) {
-        return request(url, null, "GET", false, null);
-    }
-
-    /**
-     * @param url
-     * @param hashMap
-     * @param listener
-     */
-    public void postAsyn(String url, HashMap<String, Object> hashMap, final OnHttpListener listener) {
-        request(url, hashMap, "POST", true, listener);
-    }
-
-    /**
-     * @param url
-     * @param listener
-     */
-    public void postAsyn(String url, final OnHttpListener listener) {
-        request(url, null, "POST", true, listener);
-    }
-
-    /**
-     * @param url
-     * @param hashMap
-     * @return
-     */
-    public String post(String url, HashMap<String, Object> hashMap) {
-        return request(url, hashMap, "POST", false, null);
-    }
-
-    /**
-     * @param url
-     * @return
-     */
-    public String post(String url) {
-        return request(url, null, "POST", false, null);
-    }
-
-    public void downAsynFile(String url, final String path) {
+    public void downAsynFile(String url, final String path, final OnHttpListener listener) {
         Request request = new Request.Builder().url(url).build();
         mOkHttpClient.newCall(request).enqueue(new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
-
+                if (listener != null) {
+                    listener.onFailure(call, e);
+                }
             }
 
             @Override
@@ -221,6 +200,9 @@ public class OkHttpManager {
                         fileOutputStream.write(buffer, 0, len);
                     }
                     fileOutputStream.flush();
+                    if (listener != null) {
+                        listener.onSuccess(call, null, "");
+                    }
                 } catch (IOException e) {
                     e.printStackTrace();
                 } finally {
@@ -238,6 +220,7 @@ public class OkHttpManager {
                             e.printStackTrace();
                         }
                     }
+
                 }
 
             }
@@ -254,7 +237,7 @@ public class OkHttpManager {
      * @param files
      * @param listener
      */
-    public void postAsynFile(String url, HashMap<String, Object> hashMap, String fileKey, ArrayList<File> files, final OnHttpListener listener) {
+    public void postAsynFile(String url, HashMap<String, Object > hashMap, String fileKey, ArrayList<File> files, final OnHttpListener listener) {
         MultipartBody.Builder builder = new MultipartBody.Builder().addPart(HttpUtil.hasMapToBody(hashMap));
         if (files != null) {
             for (File file : files) {
@@ -318,7 +301,6 @@ public class OkHttpManager {
         }
 
     }
-
 
 
 }

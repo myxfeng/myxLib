@@ -1,4 +1,4 @@
-package com.myx.library.rxjava;
+package com.myx.library.retrofit;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

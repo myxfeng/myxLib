@@ -2,8 +2,10 @@ package com.myx.feng.app;
 
 import android.app.Activity;
 import android.app.Application;
+import android.content.Context;
 import android.os.Bundle;
 import android.os.Debug;
+import android.support.multidex.MultiDex;
 import android.util.Log;
 
 import com.myx.library.image.ImageUtils;
@@ -16,7 +18,7 @@ import com.myx.library.util.LogUtils;
 /**
  * Created by mayuxin on 2017/3/17.
  */
-public class App extends Application   implements Application.ActivityLifecycleCallbacks{
+public class App extends Application implements Application.ActivityLifecycleCallbacks {
     @Override
     public void onCreate() {
         super.onCreate();
@@ -24,12 +26,18 @@ public class App extends Application   implements Application.ActivityLifecycleC
         Api.init(this);
         ImageUtils.initialize(this);
         Debug.stopMethodTracing();
-        LogUtils.init(true,"myx");
+        LogUtils.init(true, "myx");
+    }
+
+    @Override
+    protected void attachBaseContext(Context base) {
+        super.attachBaseContext(base);
+        MultiDex.install(base);
     }
 
     @Override
     public void onActivityCreated(Activity activity, Bundle savedInstanceState) {
-        Log.i("","");
+        Log.i("", "");
     }
 
     @Override
@@ -61,4 +69,5 @@ public class App extends Application   implements Application.ActivityLifecycleC
     public void onActivityDestroyed(Activity activity) {
 
     }
+
 }
