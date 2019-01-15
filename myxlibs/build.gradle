@@ -87,7 +87,7 @@ publish {
     repoName = 'maven'
     groupId = 'com.myx.library'//jcenter上的路径
     artifactId = 'lib'//项目名称
-    publishVersion = '1.0.3'//版本号
+    publishVersion = '1.0.4'//版本号
     desc = 'android utils'
     website = 'https://github.com/myxfeng/myxLib'
 }
